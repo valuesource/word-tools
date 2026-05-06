@@ -1,0 +1,51 @@
+export default async function sitemap() {
+  const baseUrl = 'http://localhost:3000'
+
+  const urls = ['']
+
+  for (let i = 2; i <= 15; i++) {
+    urls.push(`/${i}-letter-words`)
+  }
+
+  const letters = 'abcdefghijklmnopqrstuvwxyz'.split('')
+
+  letters.forEach((letter) => {
+    urls.push(`/words-starting-with/${letter}`)
+    urls.push(`/words-ending-with/${letter}`)
+  })
+
+  const commonCombos = [
+    'aert', 'alert', 'alter', 'react', 'trace', 'crate',
+    'stone', 'tones', 'notes', 'rates', 'tears', 'stare',
+    'listen', 'silent', 'earth', 'heart', 'thing', 'night',
+    'right', 'train', 'brain', 'plane', 'words', 'games',
+    'solve', 'puzzle'
+  ]
+
+  commonCombos.forEach((combo) => {
+    urls.push(`/words-with-letters/${combo}`)
+  })
+
+  // Generate 676 two-letter pattern pages: aa through zz
+  letters.forEach((first) => {
+    letters.forEach((second) => {
+      urls.push(`/words-containing/${first}${second}`)
+    })
+  })
+
+  // Add high-value common longer patterns
+  const commonPatterns = [
+    'ing', 'tion', 'er', 'ed', 'ly', 'qu', 'th', 'sh',
+    'ch', 'ph', 'ck', 'oo', 'ee', 'ai', 'ou', 'ea',
+    'ar', 'or', 'st', 'tr', 'pr', 'br', 'cr', 'gr'
+  ]
+
+  commonPatterns.forEach((pattern) => {
+    urls.push(`/words-containing/${pattern}`)
+  })
+
+  return urls.map((path) => ({
+    url: `${baseUrl}${path}`,
+    lastModified: new Date(),
+  }))
+}
