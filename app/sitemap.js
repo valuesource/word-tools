@@ -1,5 +1,5 @@
 export default async function sitemap() {
-  const baseUrl = 'http://localhost:3000'
+  const baseUrl = 'https://wordunscramblr.net'
 
   const urls = ['']
 
