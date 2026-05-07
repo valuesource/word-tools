@@ -30,7 +30,7 @@ export default async function Page({ params }) {
       <h1>Words Containing {pattern.toUpperCase()}</h1>
 
       <p>
-        Browse words that contain the letters "{pattern}".
+        Browse words that contain the letters <strong>{pattern.toUpperCase()}</strong>.
       </p>
 
       {error && (
