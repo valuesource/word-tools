@@ -1,3 +1,4 @@
+import Breadcrumbs from '@/components/Breadcrumbs'
 import { supabase } from '@/lib/supabase'
 import InternalLinks from '@/components/InternalLinks'
 import SeoContent from '@/components/SeoContent'
@@ -27,6 +28,7 @@ export default async function Page({ params }) {
 
   return (
     <div style={{ padding: 40 }}>
+      <Breadcrumbs items={[{ label: `Words Containing ${pattern.toUpperCase()}`, href: `/words-containing/${pattern}` }]} />
       <h1>Words Containing {pattern.toUpperCase()}</h1>
 
       <p>

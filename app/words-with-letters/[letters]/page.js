@@ -1,3 +1,4 @@
+import Breadcrumbs from '@/components/Breadcrumbs'
 import WordList from '@/components/WordList'
 import InternalLinks from '@/components/InternalLinks'
 import { supabase } from '@/lib/supabase'
@@ -31,6 +32,7 @@ export default async function Page({ params }) {
 
   return (
     <div style={{ padding: 40 }}>
+      <Breadcrumbs items={[{ label: `Words With Letters ${letters.toUpperCase()}`, href: `/words-with-letters/${letters}` }]} />
       <h1>Words with Letters {letters.toUpperCase()}</h1>
 
       <p>Showing words that contain all letters: {letters.toUpperCase()}</p>

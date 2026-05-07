@@ -1,3 +1,4 @@
+import Breadcrumbs from '@/components/Breadcrumbs'
 import WordList from '@/components/WordList'
 import InternalLinks from '@/components/InternalLinks'
 import { supabase } from '@/lib/supabase'
@@ -27,6 +28,7 @@ export default async function Page({ params }) {
 
   return (
     <div style={{ padding: 40 }}>
+      <Breadcrumbs items={[{ label: `Words Starting With ${letter.toUpperCase()}`, href: `/words-starting-with/${letter}` }]} />
       <h1>Words Starting With {letter.toUpperCase()}</h1>
       <p>Find words that begin with the letter {letter.toUpperCase()}.</p>
 

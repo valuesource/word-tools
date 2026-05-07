@@ -1,3 +1,4 @@
+import Breadcrumbs from '@/components/Breadcrumbs'
 import { supabase } from '@/lib/supabase'
 import { notFound } from 'next/navigation'
 import InternalLinks from '@/components/InternalLinks'
@@ -46,6 +47,7 @@ export default async function Page({ params }) {
 
   return (
     <div style={{ padding: 40 }}>
+      <Breadcrumbs items={[{ label: `${length} Letter Words`, href: `/${length}-letter-words` }]} />
       <h1>{length} Letter Words</h1>
       <p>Browse {length} letter words for Wordle, Scrabble, and other word games.</p>
 
