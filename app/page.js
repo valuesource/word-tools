@@ -95,6 +95,7 @@ export default function Home() {
           <li><Link href="/5-letter-words">5 Letter Words</Link></li>
           <li><Link href="/6-letter-words">6 Letter Words</Link></li>
           <li><Link href="/7-letter-words">7 Letter Words</Link></li>
+        <li><Link href="/highest-scoring-words">Highest Scoring Words</Link></li>
         </ul>
       </section>
 

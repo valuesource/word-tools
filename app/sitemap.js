@@ -12,6 +12,7 @@ export default async function sitemap() {
   letters.forEach((letter) => {
     urls.push(`/words-starting-with/${letter}`)
     urls.push(`/words-ending-with/${letter}`)
+    urls.push('/highest-scoring-words')
   })
 
   const commonCombos = [
