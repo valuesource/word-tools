@@ -1,3 +1,4 @@
+import { wordSelect, applyBestWordOrder } from '@/lib/wordQueries'
 import JsonLd from '@/components/JsonLd'
 import Breadcrumbs from '@/components/Breadcrumbs'
 import WordList from '@/components/WordList'
@@ -27,11 +28,8 @@ export default async function Page({ params }) {
   })
 
   const { data, error } = await query
-  .order('score', { ascending: false })
-  .order('word')
-  .select('word, scrabble_score')
-  .limit(100)
-
+  .select(wordSelect())
+  applyBestWordOrder(query).limit(500)
   return (
     <>
     <JsonLd

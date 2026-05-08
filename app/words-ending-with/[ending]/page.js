@@ -1,3 +1,4 @@
+import { wordSelect, applyBestWordOrder } from '@/lib/wordQueries'
 import JsonLd from '@/components/JsonLd'
 import Breadcrumbs from '@/components/Breadcrumbs'
 import WordList from '@/components/WordList'
@@ -21,11 +22,9 @@ export default async function Page({ params }) {
 
   const { data, error } = await supabase
     .from('words')
-    .select('word, scrabble_score')
+    .select(wordSelect())
     .ilike('word', `%${ending}`)
-    .order('score', { ascending: false })
-.order('word')
-    .limit(300)
+    applyBestWordOrder(query).limit(500)
 
   return (
     <>

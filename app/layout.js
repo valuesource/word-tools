@@ -9,14 +9,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body
-        style={{
-          margin: 0,
-          fontFamily: 'Arial, sans-serif',
-          background: '#fff',
-          color: '#111',
-        }}
-      >
+      <body className="body-root">
         <Script
   src="https://www.googletagmanager.com/gtag/js?id=G-Y2S27B0Z0Y"
   strategy="afterInteractive"
@@ -70,4 +63,18 @@ export default function RootLayout({ children }) {
       </body>
     </html>
   )
+}
+
+// Add global styles for the body element
+if (typeof document !== "undefined") {
+  const style = document.createElement("style");
+  style.innerHTML = `
+    .body-root {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #fff;
+      color: #111;
+    }
+  `;
+  document.head.appendChild(style);
 }

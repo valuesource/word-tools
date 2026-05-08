@@ -1,6 +1,7 @@
 import { supabase } from '@/lib/supabase'
 import WordList from '@/components/WordList'
 import InternalLinks from '@/components/InternalLinks'
+import { wordSelect } from '@/lib/wordQueries'
 
 export const metadata = {
   title: 'Highest Scoring Words',
@@ -10,9 +11,10 @@ export const metadata = {
 export default async function Page() {
   const { data, error } = await supabase
     .from('words')
-    .select('word, scrabble_score')
+    .select(wordSelect())
     .gte('scrabble_score', 20)
     .order('scrabble_score', { ascending: false })
+    .order('frequency', { ascending: false })
     .order('word')
     .limit(500)
 

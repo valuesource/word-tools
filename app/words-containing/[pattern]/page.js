@@ -1,3 +1,4 @@
+import { wordSelect, applyBestWordOrder } from '@/lib/wordQueries'
 import JsonLd from '@/components/JsonLd'
 import Breadcrumbs from '@/components/Breadcrumbs'
 import { supabase } from '@/lib/supabase'
@@ -19,14 +20,12 @@ export default async function Page({ params }) {
   const resolvedParams = await params
   const pattern = (resolvedParams.pattern || '').toLowerCase()
 
-  const { data, error } = await supabase
-    .from('words')
-    .select('word, scrabble_score')
-    .ilike('word', `%${pattern}%`)
-    .order('score', { ascending: false })
-.order('word')
-    .limit(500)
+  let query = supabase
+  .from('words')
+  .select(wordSelect())
+  .ilike('word', `%${pattern}%`)
 
+const { data, error } = await applyBestWordOrder(query).limit(500)
   return (
     <>
     <JsonLd
