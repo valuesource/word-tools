@@ -21,7 +21,7 @@ export default async function Page({ params }) {
 
   const { data, error } = await supabase
     .from('words')
-    .select('word')
+    .select('word, scrabble_score')
     .ilike('word', `%${ending}`)
     .order('score', { ascending: false })
 .order('word')

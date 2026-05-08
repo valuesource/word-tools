@@ -21,7 +21,7 @@ export default async function Page({ params }) {
 
   const { data, error } = await supabase
     .from('words')
-    .select('word')
+    .select('word, scrabble_score')
     .eq('starts_with', letter)
     .order('score', { ascending: false })
 .order('word')

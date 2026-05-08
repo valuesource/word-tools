@@ -29,6 +29,7 @@ export default async function Page({ params }) {
   const { data, error } = await query
   .order('score', { ascending: false })
   .order('word')
+  .select('word, scrabble_score')
   .limit(100)
 
   return (
