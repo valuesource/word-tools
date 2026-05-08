@@ -28,6 +28,7 @@ export default async function Page({ params }) {
     .limit(300)
 
   return (
+    <>
     <JsonLd
   data={{
     '@context': 'https://schema.org',
@@ -48,5 +49,6 @@ export default async function Page({ params }) {
       <SeoContent type="ends" value={ending} />
       <InternalLinks letters={ending} />
     </div>
+    </>
   )
 }

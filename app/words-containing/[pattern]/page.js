@@ -28,6 +28,7 @@ export default async function Page({ params }) {
     .limit(500)
 
   return (
+    <>
     <JsonLd
   data={{
     '@context': 'https://schema.org',
@@ -60,5 +61,6 @@ export default async function Page({ params }) {
 
       <InternalLinks letters={pattern} />
     </div>
+    </>
   )
 }
