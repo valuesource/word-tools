@@ -1,7 +1,7 @@
-import { wordSelect, applyBestWordOrder } from '@/lib/wordQueries'
 import { supabase } from '@/lib/supabase'
 import WordList from '@/components/WordList'
 import InternalLinks from '@/components/InternalLinks'
+import { wordSelect, applyBestWordOrder } from '@/lib/wordQueries'
 
 export async function generateMetadata({ params }) {
   const resolvedParams = await params
@@ -20,14 +20,11 @@ export default async function Page({ params }) {
   const sqlPattern = pattern.replace(/\*/g, '_')
 
   let query = supabase
-  query = applyBestWordOrder(query)
     .from('words')
     .select(wordSelect())
     .like('word', sqlPattern)
-    .limit(500)
-    .order('scrabble_score', { ascending: false })
 
-  const { data, error } = await query
+  const { data, error } = await applyBestWordOrder(query).limit(200)
 
   return (
     <main style={{ padding: 40 }}>
