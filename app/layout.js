@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Script from 'next/script'
 
 export const metadata = {
   title: 'WordUnscramblr',
@@ -16,6 +17,20 @@ export default function RootLayout({ children }) {
           color: '#111',
         }}
       >
+        <Script
+  src="https://www.googletagmanager.com/gtag/js?id=G-Y2S27B0Z0Y"
+  strategy="afterInteractive"
+/>
+
+<Script id="google-analytics" strategy="afterInteractive">
+  {`
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-Y2S27B0Z0Y');
+  `}
+</Script>
         {children}
 
         <footer
