@@ -97,6 +97,7 @@ export default function Home() {
           <li><Link href="/7-letter-words">7 Letter Words</Link></li>
         <li><Link href="/highest-scoring-words">Highest Scoring Words</Link></li>
         <li><Link href="/wordle-helper">Wordle Helper</Link></li>
+        <li><Link href="/scrabble-word-finder">Scrabble Word Finder</Link></li>
         </ul>
       </section>
 

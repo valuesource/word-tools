@@ -13,6 +13,8 @@ export default async function sitemap() {
     urls.push(`/words-starting-with/${letter}`)
     urls.push(`/words-ending-with/${letter}`)
     urls.push('/highest-scoring-words')
+    urls.push('/scrabble-word-finder')
+    urls.push('/wordle-helper')
   })
 
   const commonCombos = [
