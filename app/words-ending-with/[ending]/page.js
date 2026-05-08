@@ -1,3 +1,4 @@
+import JsonLd from '@/components/JsonLd'
 import Breadcrumbs from '@/components/Breadcrumbs'
 import WordList from '@/components/WordList'
 import InternalLinks from '@/components/InternalLinks'
@@ -27,6 +28,15 @@ export default async function Page({ params }) {
     .limit(300)
 
   return (
+    <JsonLd
+  data={{
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name: `Words Ending With ${ending.toUpperCase()}`,
+    description: `Find words ending with ${ending.toUpperCase()} for word games and puzzles.`,
+    url: `https://wordunscramblr.net/words-ending-with/${ending}`,
+  }}
+/>
     <div style={{ padding: 40 }}>
       <Breadcrumbs items={[{ label: `Words Ending With ${ending.toUpperCase()}`, href: `/words-ending-with/${ending}` }]} />
       <h1>Words Ending With {ending.toUpperCase()}</h1>

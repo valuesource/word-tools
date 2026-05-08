@@ -1,3 +1,4 @@
+import JsonLd from '@/components/JsonLd'
 import Breadcrumbs from '@/components/Breadcrumbs'
 import WordList from '@/components/WordList'
 import InternalLinks from '@/components/InternalLinks'
@@ -31,6 +32,15 @@ export default async function Page({ params }) {
   .limit(100)
 
   return (
+    <JsonLd
+  data={{
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name: `Words With Letters ${letters.toUpperCase()}`,
+    description: `Find words with the letters ${letters.toUpperCase()} for word games and puzzles.`,
+    url: `https://wordunscramblr.net/words-with-letters/${letters}`,
+  }}
+/>
     <div style={{ padding: 40 }}>
       <Breadcrumbs items={[{ label: `Words With Letters ${letters.toUpperCase()}`, href: `/words-with-letters/${letters}` }]} />
       <h1>Words with Letters {letters.toUpperCase()}</h1>

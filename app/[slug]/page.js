@@ -1,3 +1,4 @@
+import JsonLd from '@/components/JsonLd'
 import Breadcrumbs from '@/components/Breadcrumbs'
 import { supabase } from '@/lib/supabase'
 import { notFound } from 'next/navigation'
@@ -46,6 +47,15 @@ export default async function Page({ params }) {
     .limit(500)
 
   return (
+    <JsonLd
+  data={{
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name: `${length} Letter Words`,
+    description: `Find ${length} letter words for word games and puzzles.`,
+    url: `https://wordunscramblr.net/${length}-letter-words`,
+  }}
+/>
     <div style={{ padding: 40 }}>
       <Breadcrumbs items={[{ label: `${length} Letter Words`, href: `/${length}-letter-words` }]} />
       <h1>{length} Letter Words</h1>

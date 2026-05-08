@@ -1,3 +1,4 @@
+import JsonLd from '@/components/JsonLd'
 import Breadcrumbs from '@/components/Breadcrumbs'
 import { supabase } from '@/lib/supabase'
 import InternalLinks from '@/components/InternalLinks'
@@ -27,6 +28,15 @@ export default async function Page({ params }) {
     .limit(500)
 
   return (
+    <JsonLd
+  data={{
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name: `Words Containing ${pattern.toUpperCase()}`,
+    description: `Find words containing ${pattern.toUpperCase()} for word games and puzzles.`,
+    url: `https://wordunscramblr.net/words-containing/${pattern}`,
+  }}
+/>
     <div style={{ padding: 40 }}>
       <Breadcrumbs items={[{ label: `Words Containing ${pattern.toUpperCase()}`, href: `/words-containing/${pattern}` }]} />
       <h1>Words Containing {pattern.toUpperCase()}</h1>
