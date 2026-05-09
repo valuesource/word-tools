@@ -1,4 +1,3 @@
-import { applyBestWordOrder } from '@/lib/wordQueries'
 import { wordSelect } from '@/lib/wordQueries'
 import JsonLd from '@/components/JsonLd'
 import Breadcrumbs from '@/components/Breadcrumbs'

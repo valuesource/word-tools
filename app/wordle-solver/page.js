@@ -1,6 +1,6 @@
 'use client'
-
 import { useState } from 'react'
+import WordleRow from '@/components/solver/WordleRow'
 
 export default function WordleSolverPage() {
   const [include, setInclude] = useState('')
@@ -8,9 +8,65 @@ export default function WordleSolverPage() {
   const [pattern, setPattern] = useState('')
   const [yellow, setYellow] = useState('')
   const [results, setResults] = useState([])
+  const [tiles, setTiles] = useState([
+  { letter: '', status: 'gray' },
+  { letter: '', status: 'gray' },
+  { letter: '', status: 'gray' },
+  { letter: '', status: 'gray' },
+  { letter: '', status: 'gray' },
+])
 
   async function handleSearch(e) {
     e.preventDefault()
+
+    async function handleSearch(e) {
+  e.preventDefault()
+
+  let generatedPattern = ''
+  let generatedInclude = ''
+  let generatedExclude = ''
+  let generatedYellow = []
+
+  tiles.forEach((tile, index) => {
+    const letter = tile.letter
+
+    if (!letter) {
+      generatedPattern += '*'
+      return
+    }
+
+    if (tile.status === 'green') {
+      generatedPattern += letter
+      generatedInclude += letter
+    } else {
+      generatedPattern += '*'
+    }
+
+    if (tile.status === 'yellow') {
+      generatedInclude += letter
+      generatedYellow.push(`${letter}:${index + 1}`)
+    }
+
+    if (tile.status === 'gray') {
+      generatedExclude += letter
+    }
+  })
+
+  const params = new URLSearchParams({
+    include: generatedInclude || include,
+    exclude: generatedExclude || exclude,
+    pattern: generatedPattern || pattern,
+    yellow: generatedYellow.join(',') || yellow,
+  })
+
+  const response = await fetch(
+    `/api/wordle-solver?${params.toString()}`
+  )
+
+  const data = await response.json()
+
+  setResults(data.words || [])
+}
 
  const params = new URLSearchParams({
   include,
@@ -39,7 +95,7 @@ setResults(data.words || [])
       <p>
         Find possible Wordle answers using included and excluded letters.
       </p>
-
+<WordleRow tiles={tiles} setTiles={setTiles} />
       <form
         onSubmit={handleSearch}
         style={{
@@ -101,13 +157,68 @@ setResults(data.words || [])
         </button>
       </form>
 
-      <ul>
-        {results.map((word) => (
-          <li key={word.word}>
-            {word.word} — {word.scrabble_score} pts
-          </li>
-        ))}
-      </ul>
+      <div
+  style={{
+    marginTop: 30,
+    display: 'grid',
+    gap: 12,
+  }}
+>
+  {results.map((word) => {
+    const qualityColors = {
+      'Excellent Guess': '#6aaa64',
+      'Strong Guess': '#c9b458',
+      'Vowel Heavy': '#4a90e2',
+      'Standard Guess': '#787c7e',
+    }
+
+    return (
+      <div
+        key={word.word}
+        style={{
+          border: '1px solid #ddd',
+          borderRadius: 12,
+          padding: 16,
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+        }}
+      >
+        <div>
+          <div
+            style={{
+              fontSize: 28,
+              fontWeight: 'bold',
+              letterSpacing: 2,
+            }}
+          >
+            {word.word.toUpperCase()}
+          </div>
+
+          <div
+            style={{
+              marginTop: 6,
+              color: qualityColors[word.guessQuality],
+              fontWeight: 600,
+            }}
+          >
+            {word.guessQuality}
+          </div>
+        </div>
+
+        <div
+          style={{
+            textAlign: 'right',
+            color: '#666',
+          }}
+        >
+          <div>{word.uniqueScore} unique</div>
+          <div>{word.scrabble_score} pts</div>
+        </div>
+      </div>
+    )
+  })}
+</div>
     </main>
   )
 }

@@ -1,4 +1,8 @@
 import { supabase } from '@/lib/supabase'
+import {
+  getUniqueLetterScore,
+  getGuessQuality,
+} from '@/lib/solverRanking'
 
 export async function GET(request) {
   try {
@@ -52,7 +56,23 @@ export async function GET(request) {
       return Response.json({ words: [], error: error.message }, { status: 500 })
     }
 
-    return Response.json({ words: data || [] })
+    const rankedWords = (data || [])
+    .map((item) => ({
+  ...item,
+  uniqueScore: getUniqueLetterScore(item.word),
+  guessQuality: getGuessQuality(item.word),
+}))
+      .sort((a, b) => {
+        if (b.uniqueScore !== a.uniqueScore) {
+          return b.uniqueScore - a.uniqueScore
+        }
+
+        return b.frequency - a.frequency
+      })
+
+    return Response.json({
+      words: rankedWords,
+    })
   } catch (error) {
     return Response.json(
       { words: [], error: error.message },
