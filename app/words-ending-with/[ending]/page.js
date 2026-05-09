@@ -1,4 +1,5 @@
-import { wordSelect, applyBestWordOrder } from '@/lib/wordQueries'
+import { applyBestWordOrder } from '@/lib/wordQueries'
+import { wordSelect } from '@/lib/wordQueries'
 import JsonLd from '@/components/JsonLd'
 import Breadcrumbs from '@/components/Breadcrumbs'
 import WordList from '@/components/WordList'
@@ -17,14 +18,16 @@ export async function generateMetadata({ params }) {
 }
 
 export default async function Page({ params }) {
-  const resolvedParams = await params
-  const ending = (resolvedParams.ending || '').toLowerCase()
-
+  const ending = params?.ending || ''
   const { data, error } = await supabase
     .from('words')
     .select(wordSelect())
     .ilike('word', `%${ending}`)
-    applyBestWordOrder(query).limit(500)
+    .gte('scrabble_score', 20)
+    .order('scrabble_score', { ascending: false })
+    .order('frequency', { ascending: false })
+    .order('word')
+    .limit(500)
 
   return (
     <>

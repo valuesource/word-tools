@@ -1,4 +1,5 @@
-import { wordSelect, applyBestWordOrder } from '@/lib/wordQueries'
+import { applyBestWordOrder } from '@/lib/wordQueries'
+import { wordSelect } from '@/lib/wordQueries'
 import JsonLd from '@/components/JsonLd'
 import Breadcrumbs from '@/components/Breadcrumbs'
 import WordList from '@/components/WordList'
@@ -17,14 +18,16 @@ export async function generateMetadata({ params }) {
 }
 
 export default async function Page({ params }) {
-  const resolvedParams = await params
-  const letter = (resolvedParams.letter || '').toLowerCase()
-
+  const letter = params?.letter || ''
   const { data, error } = await supabase
-    .from('words')
-    .select(wordSelect())
-    .eq('starts_with', letter)
-    applyBestWordOrder(query).limit(500)
+  .from('words')
+  .select(wordSelect())
+    .ilike('word', `%${letter}`)
+    .gte('scrabble_score', 20)
+    .order('scrabble_score', { ascending: false })
+    .order('frequency', { ascending: false })
+    .order('word')
+    .limit(500)
 
   return (
     <>
@@ -43,8 +46,8 @@ export default async function Page({ params }) {
       <p>Find words that begin with the letter {letter.toUpperCase()}.</p>
 
       {error && <p style={{ color: 'red' }}>Database error: {error.message}</p>}
-
-      <WordList words={data || []} />
+      {!data && !error && <p>Loading words...</p>}
+      {data && <WordList words={data} />}
       <SeoContent type="starts" value={letter} />
       <InternalLinks letters={letter} />
     </div>
