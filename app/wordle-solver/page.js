@@ -6,18 +6,24 @@ export default function WordleSolverPage() {
   const [include, setInclude] = useState('')
   const [exclude, setExclude] = useState('')
   const [pattern, setPattern] = useState('')
+  const [yellow, setYellow] = useState('')
   const [results, setResults] = useState([])
 
   async function handleSearch(e) {
     e.preventDefault()
 
-    const response = await fetch(
-  `/api/wordle-solver?include=${include}&exclude=${exclude}&pattern=${pattern}`
-)
+ const params = new URLSearchParams({
+  include,
+  exclude,
+  pattern,
+  yellow,
+})
 
-    const data = await response.json()
+const response = await fetch(`/api/wordle-solver?${params.toString()}`)
 
-    setResults(data.words || [])
+const data = await response.json()
+
+setResults(data.words || [])
   }
 
   return (
@@ -67,6 +73,17 @@ export default function WordleSolverPage() {
   placeholder="Pattern (example: a**e*)"
   value={pattern}
   onChange={(e) => setPattern(e.target.value)}
+  style={{
+    padding: 12,
+    fontSize: 18,
+  }}
+/>
+
+<input
+
+  placeholder="Yellow letters (example: e:1,a:4)"
+  value={yellow}
+  onChange={(e) => setYellow(e.target.value)}
   style={{
     padding: 12,
     fontSize: 18,
