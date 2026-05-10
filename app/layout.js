@@ -15,6 +15,12 @@ export default function RootLayout({ children }) {
   src="https://www.googletagmanager.com/gtag/js?id=G-Y2S27B0Z0Y"
   strategy="afterInteractive"
 />
+<Script
+  async
+  strategy="afterInteractive"
+  src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3078298049541588"
+  crossOrigin="anonymous"
+/>
 
 <Script id="google-analytics" strategy="afterInteractive">
   {`

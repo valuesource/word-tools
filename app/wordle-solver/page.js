@@ -1,7 +1,6 @@
 'use client'
 import { useState } from 'react'
 import WordleRow from '@/components/solver/WordleRow'
-import Link from 'next/link'
 
 export default function WordleSolverPage() {
   const [include, setInclude] = useState('')
@@ -20,54 +19,6 @@ export default function WordleSolverPage() {
   async function handleSearch(e) {
     e.preventDefault()
 
-    async function handleSearch(e) {
-  e.preventDefault()
-
-  let generatedPattern = ''
-  let generatedInclude = ''
-  let generatedExclude = ''
-  let generatedYellow = []
-
-  tiles.forEach((tile, index) => {
-    const letter = tile.letter
-
-    if (!letter) {
-      generatedPattern += '*'
-      return
-    }
-
-    if (tile.status === 'green') {
-      generatedPattern += letter
-      generatedInclude += letter
-    } else {
-      generatedPattern += '*'
-    }
-
-    if (tile.status === 'yellow') {
-      generatedInclude += letter
-      generatedYellow.push(`${letter}:${index + 1}`)
-    }
-
-    if (tile.status === 'gray') {
-      generatedExclude += letter
-    }
-  })
-
-  const params = new URLSearchParams({
-    include: generatedInclude || include,
-    exclude: generatedExclude || exclude,
-    pattern: generatedPattern || pattern,
-    yellow: generatedYellow.join(',') || yellow,
-  })
-
-  const response = await fetch(
-    `/api/wordle-solver?${params.toString()}`
-  )
-
-  const data = await response.json()
-
-  setResults(data.words || [])
-}
 
  const params = new URLSearchParams({
   include,
