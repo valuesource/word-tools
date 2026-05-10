@@ -230,12 +230,6 @@ setResults(data.words || [])
     )
   })}
 </div>
-<p></p>
-<p><ul>
-  <li><Link href="/best-wordle-starting-words">Best Starting Words</Link></li>
-  <li><Link href="/5-letter-words">5 Letter Words</Link></li>
-  <li><Link href="/scrabble-word-finder">Scrabble Word Finder</Link></li>
-  </ul></p>
     </main>
   )
 }

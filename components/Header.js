@@ -39,6 +39,9 @@ export default function Header() {
             flexWrap: 'wrap',
           }}
         >
+          <Link href="/word-lists">
+  Word Lists
+</Link>
           <Link href="/wordle-solver">
             Wordle Solver
           </Link>

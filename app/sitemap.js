@@ -10,6 +10,10 @@ export default async function sitemap() {
   const letters = 'abcdefghijklmnopqrstuvwxyz'.split('')
 
   letters.forEach((letter) => {
+    urls.push('/word-lists')
+    urls.push('/wordle-solver')
+    urls.push('/best-wordle-starting-words')
+    urls.push(`/words-containing/${letter}`)
     urls.push(`/words-starting-with/${letter}`)
     urls.push(`/words-ending-with/${letter}`)
     urls.push('/highest-scoring-words')
