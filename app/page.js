@@ -98,6 +98,8 @@ export default function Home() {
         <li><Link href="/highest-scoring-words">Highest Scoring Words</Link></li>
         <li><Link href="/wordle-helper">Wordle Helper</Link></li>
         <li><Link href="/scrabble-word-finder">Scrabble Word Finder</Link></li>
+        <li><Link href="/best-wordle-starting-words">Best Wordle Starting Words</Link></li>
+        
         </ul>
       </section>
 

@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import Script from 'next/script'
+import Header from '@/components/Header'
 
 export const metadata = {
   title: 'WordUnscramblr',
@@ -33,6 +34,7 @@ export default function RootLayout({ children }) {
     })(window, document, "clarity", "script", "wnnu98cxqk");
   `}
 </Script>
+<Header />
         {children}
 
         <footer

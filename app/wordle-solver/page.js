@@ -1,6 +1,7 @@
 'use client'
 import { useState } from 'react'
 import WordleRow from '@/components/solver/WordleRow'
+import Link from 'next/link'
 
 export default function WordleSolverPage() {
   const [include, setInclude] = useState('')
@@ -214,11 +215,27 @@ setResults(data.words || [])
         >
           <div>{word.uniqueScore} unique</div>
           <div>{word.scrabble_score} pts</div>
+          <div
+  style={{
+    display: 'flex',
+    gap: 20,
+    marginBottom: 20,
+    flexWrap: 'wrap',
+  }}
+>
+ 
+</div>
         </div>
       </div>
     )
   })}
 </div>
+<p></p>
+<p><ul>
+  <li><Link href="/best-wordle-starting-words">Best Starting Words</Link></li>
+  <li><Link href="/5-letter-words">5 Letter Words</Link></li>
+  <li><Link href="/scrabble-word-finder">Scrabble Word Finder</Link></li>
+  </ul></p>
     </main>
   )
 }
