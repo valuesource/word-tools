@@ -99,6 +99,7 @@ export default function Home() {
         <li><Link href="/wordle-helper">Wordle Helper</Link></li>
         <li><Link href="/scrabble-word-finder">Scrabble Word Finder</Link></li>
         <li><Link href="/best-wordle-starting-words">Best Wordle Starting Words</Link></li>
+        <li><Link href="/guides">Word Game Guides</Link></li>
         
         </ul>
       </section>

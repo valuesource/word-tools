@@ -19,6 +19,7 @@ export default async function sitemap() {
     urls.push('/highest-scoring-words')
     urls.push('/scrabble-word-finder')
     urls.push('/wordle-helper')
+    urls.push('/guides')
   })
 
   const commonCombos = [

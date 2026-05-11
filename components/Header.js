@@ -38,7 +38,7 @@ export default function Header() {
             gap: 20,
             flexWrap: 'wrap',
           }}
-        >
+        > 
           <Link href="/word-lists">
   Word Lists
 </Link>
@@ -61,7 +61,10 @@ export default function Header() {
           <Link href="/highest-scoring-words">
             High Scoring Words
           </Link>
-        </nav>
+
+          <Link href="/guides">
+            Word Game Guides</Link>
+                 </nav>
       </div>
     </header>
   )
