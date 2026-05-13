@@ -22,7 +22,6 @@ export default async function Page({ params }) {
     .from('words')
     .select(wordSelect())
     .ilike('word', `%${ending}`)
-    .gte('scrabble_score', 20)
     .order('scrabble_score', { ascending: false })
     .order('frequency', { ascending: false })
     .order('word')

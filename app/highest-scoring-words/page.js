@@ -12,7 +12,6 @@ export default async function Page() {
   const { data, error } = await supabase
     .from('words')
     .select(wordSelect())
-    .gte('scrabble_score', 20)
     .order('scrabble_score', { ascending: false })
     .order('frequency', { ascending: false })
     .order('word')

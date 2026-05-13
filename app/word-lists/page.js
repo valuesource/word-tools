@@ -19,7 +19,7 @@ export default function WordListsPage() {
       <section style={{ marginTop: 40 }}>
         <h2>Words by Length</h2>
         <ul>
-          {[2,3,4,5,6,7,8,9,10,11,12].map((length) => (
+          {[2,3,4,5,6,7,8,9,10,11,12,13,14,15].map((length) => (
             <li key={length}>
               <Link href={`/${length}-letter-words`}>
                 {length} Letter Words

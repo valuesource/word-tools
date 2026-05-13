@@ -21,12 +21,11 @@ export default async function Page({ params }) {
   const { data, error } = await supabase
   .from('words')
   .select(wordSelect())
-    .ilike('word', `%${letter}`)
-    .gte('scrabble_score', 20)
-    .order('scrabble_score', { ascending: false })
-    .order('frequency', { ascending: false })
-    .order('word')
-    .limit(500)
+  .eq('starts_with', letter)
+  .order('frequency', { ascending: false })
+  .order('scrabble_score', { ascending: false })
+  .order('word')
+  .limit(300)
 
   return (
     <>
