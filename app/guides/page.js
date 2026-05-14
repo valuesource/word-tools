@@ -25,6 +25,12 @@ const guides = [
     description:
       'Improve your Scrabble score with high-value words and smart strategies.',
   },
+  {
+    title: 'Q Words Without U',
+    href: '/guides/q-without-u-words',
+    description:
+      'Scrabble dictionaries include several accepted Q words without U.',
+  },
 ]
 
 export default function GuidesPage() {

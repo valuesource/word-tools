@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import Script from 'next/script'
 import Header from '@/components/Header'
+import Footer from '@/components/Footer'
 
 export const metadata = {
   title: 'WordUnscramblr',
@@ -40,34 +41,14 @@ export default function RootLayout({ children }) {
     })(window, document, "clarity", "script", "wnnu98cxqk");
   `}
 </Script>
-<Header />
-        {children}
 
-        <footer
-          style={{
-            marginTop: 60,
-            padding: 30,
-            borderTop: '1px solid #ddd',
-            textAlign: 'center',
-          }}
-        >
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'center',
-              gap: 20,
-              flexWrap: 'wrap',
-            }}
-          >
-            <Link href="/about">About</Link>
-            <Link href="/privacy-policy">Privacy Policy</Link>
-            <Link href="/contact">Contact</Link>
-          </div>
+       <body className="body-root">
+  <Header />
 
-          <p style={{ marginTop: 20 }}>
-            © 2026 WordUnscramblr
-          </p>
-        </footer>
+  {children}
+
+  <Footer />
+</body>
       </body>
     </html>
   )

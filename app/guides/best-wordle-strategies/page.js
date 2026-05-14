@@ -229,6 +229,35 @@ export default function BestWordleStrategiesPage() {
         A solver becomes most useful after you already have some confirmed or
         eliminated letters.
       </p>
+      <section style={{ marginTop: 60 }}>
+  <h2>Related Guides</h2>
+
+  <ul>
+    <li>
+      <Link href="/guides/how-to-win-wordle">
+        How To Win Wordle
+      </Link>
+    </li>
+
+    <li>
+      <Link href="/guides/best-wordle-strategies">
+        Best Wordle Strategies
+      </Link>
+    </li>
+
+    <li>
+      <Link href="/guides/q-without-u-words">
+        Q Words Without U
+      </Link>
+    </li>
+
+    <li>
+      <Link href="/guides/best-scrabble-words">
+        Best Scrabble Words
+      </Link>
+    </li>
+  </ul>
+</section>
     </main>
   )
 }

@@ -156,6 +156,69 @@ export default function Home() {
           ending letter, or letter combinations.
         </p>
       </section>
+      <section
+  style={{
+    marginTop: 60,
+    lineHeight: 1.8,
+  }}
+>
+  <h2>Word Tools for Wordle, Scrabble, and More</h2>
+
+  <p>
+    WordUnscramblr provides free tools for solving Wordle puzzles,
+    finding Scrabble words, exploring word lists, and discovering
+    high-scoring word combinations.
+  </p>
+
+  <p>
+    Whether you need a Wordle solver, an anagram finder, or a list
+    of words containing specific letters, our tools are designed to
+    help players solve word games more efficiently.
+  </p>
+
+  <h3>Popular Word Tools</h3>
+
+  <ul>
+    <li>
+      <Link href="/wordle-solver">
+        Wordle Solver
+      </Link>
+    </li>
+
+    <li>
+      <Link href="/best-wordle-starting-words">
+        Best Wordle Starting Words
+      </Link>
+    </li>
+
+    <li>
+      <Link href="/highest-scoring-words">
+        Highest Scoring Scrabble Words
+      </Link>
+    </li>
+
+    <li>
+      <Link href="/word-lists">
+        Word Lists
+      </Link>
+    </li>
+  </ul>
+
+  <h3>How Our Word Solver Works</h3>
+
+  <p>
+    Enter your known letters, excluded letters, or word patterns
+    to generate matching words instantly. Our solver supports
+    Wordle-style pattern matching, yellow-letter filtering,
+    and advanced word ranking based on useful letter coverage.
+  </p>
+
+  <p>
+    The site also includes thousands of word lists organized by
+    starting letters, endings, patterns, and word length to help
+    with crossword puzzles, Scrabble, and other word games.
+  </p>
+</section>
     </main>
   )
 }

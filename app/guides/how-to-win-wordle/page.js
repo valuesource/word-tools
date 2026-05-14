@@ -193,6 +193,35 @@ export default function HowToWinWordlePage() {
         A solver is most helpful after one or two guesses, once you have green,
         yellow, or gray clues to narrow the possible answers.
       </p>
+      <section style={{ marginTop: 60 }}>
+  <h2>Related Guides</h2>
+
+  <ul>
+    <li>
+      <Link href="/guides/how-to-win-wordle">
+        How To Win Wordle
+      </Link>
+    </li>
+
+    <li>
+      <Link href="/guides/best-wordle-strategies">
+        Best Wordle Strategies
+      </Link>
+    </li>
+
+    <li>
+      <Link href="/guides/q-without-u-words">
+        Q Words Without U
+      </Link>
+    </li>
+
+    <li>
+      <Link href="/guides/best-scrabble-words">
+        Best Scrabble Words
+      </Link>
+    </li>
+  </ul>
+</section>
     </main>
   )
 }
