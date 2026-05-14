@@ -41,6 +41,18 @@ export default async function sitemap() {
     })
   })
 
+const unscrambleExamples = [
+  'aert',
+  'react',
+  'stone',
+  'listen',
+  'moccasinbteshe',
+]
+
+unscrambleExamples.forEach((letters) => {
+  urls.push(`/unscramble/${letters}`)
+})
+
   // Add high-value common longer patterns
   const commonPatterns = [
     'ing', 'tion', 'er', 'ed', 'ly', 'qu', 'th', 'sh',
