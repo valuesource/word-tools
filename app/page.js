@@ -17,7 +17,7 @@ export default function Home() {
 
     if (!cleaned) return
 
-    router.push(`/unscramble/${cleaned}`)
+    router.push(`/words-from-letters/${cleaned}`)
   }
 
   return (

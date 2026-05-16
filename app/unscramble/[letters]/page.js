@@ -2,7 +2,10 @@ import { supabase } from '@/lib/supabase'
 import WordList from '@/components/WordList'
 import InternalLinks from '@/components/InternalLinks'
 import JsonLd from '@/components/JsonLd'
-import { canMakeWord } from '@/lib/canMakeWord'
+
+function sortLetters(value) {
+  return value.toLowerCase().split('').sort().join('')
+}
 
 export async function generateMetadata({ params }) {
   const resolvedParams = await params
@@ -10,7 +13,7 @@ export async function generateMetadata({ params }) {
 
   return {
     title: `Unscramble ${letters.toUpperCase()}`,
-    description: `Find words that can be made from the letters ${letters.toUpperCase()}.`,
+    description: `Find anagrams and words made from the letters ${letters.toUpperCase()}.`,
   }
 }
 
@@ -20,28 +23,15 @@ export default async function Page({ params }) {
     .toLowerCase()
     .replace(/[^a-z]/g, '')
 
-  const maxLength = letters.length
+  const sortedLetters = sortLetters(letters)
 
   const { data, error } = await supabase
-  .from('words')
-  .select('word, scrabble_score, frequency, length')
-  .lte('length', maxLength)
-  .limit(50000)
-
-  const filteredWords = (data || [])
-  .filter((item) => canMakeWord(item.word, letters))
-  .sort((a, b) => {
-    if (b.word.length !== a.word.length) {
-      return b.word.length - a.word.length
-    }
-
-    if (b.scrabble_score !== a.scrabble_score) {
-      return b.scrabble_score - a.scrabble_score
-    }
-
-    return b.frequency - a.frequency
-  })
-  .slice(0, 500)
+    .from('words')
+    .select('word, scrabble_score, frequency, length')
+    .eq('sorted', sortedLetters)
+    .order('scrabble_score', { ascending: false })
+    .order('frequency', { ascending: false })
+    .order('word')
 
   return (
     <>
@@ -50,7 +40,7 @@ export default async function Page({ params }) {
           '@context': 'https://schema.org',
           '@type': 'WebPage',
           name: `Unscramble ${letters.toUpperCase()}`,
-          description: `Find words that can be made from the letters ${letters.toUpperCase()}.`,
+          description: `Find anagrams and words made from the letters ${letters.toUpperCase()}.`,
           url: `https://wordunscramblr.net/unscramble/${letters}`,
         }}
       />
@@ -59,7 +49,7 @@ export default async function Page({ params }) {
         <h1>Unscramble {letters.toUpperCase()}</h1>
 
         <p>
-          Find words that can be made from these letters:{' '}
+          Find exact anagrams made from these letters:{' '}
           <strong>{letters.toUpperCase()}</strong>
         </p>
 
@@ -69,7 +59,7 @@ export default async function Page({ params }) {
           </p>
         )}
 
-        <WordList words={filteredWords} />
+        <WordList words={data || []} />
 
         <InternalLinks letters={letters} length={letters.length} />
       </main>
