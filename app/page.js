@@ -28,25 +28,41 @@ export default function Home() {
         padding: 40,
       }}
     >
-      <h1
-        style={{
-          fontSize: 52,
-          marginBottom: 10,
-        }}
-      >
-        Word Unscrambler
-      </h1>
 
-      <p
-        style={{
-          fontSize: 22,
-          lineHeight: 1.6,
-          marginBottom: 30,
-        }}
-      >
-        Unscramble letters, discover words, solve Wordle puzzles,
-        find Scrabble words, and improve your word game skills.
-      </p>
+      <section
+  style={{
+    textAlign: 'center',
+    padding: '70px 20px 50px',
+  }}
+>
+  <h1
+    style={{
+      fontSize: 'clamp(42px, 7vw, 72px)',
+      lineHeight: 1,
+      marginBottom: 24,
+      letterSpacing: '-0.04em',
+    }}
+  >
+    Word Solver Tools for{' '}
+    <span style={{ color: '#6aaa64' }}>
+      Wordle
+    </span>{' '}
+    & Scrabble
+  </h1>
+
+  <p
+    style={{
+      maxWidth: 760,
+      margin: '0 auto',
+      fontSize: 20,
+      color: '#555',
+      lineHeight: 1.7,
+    }}
+  >
+    Unscramble words, solve Wordle puzzles, discover high-scoring
+    Scrabble plays, and explore powerful word lists instantly.
+  </p>
+</section>
 
       <form
         onSubmit={handleSubmit}
@@ -116,6 +132,94 @@ export default function Home() {
         </ul>
       </section>
 
+      <section
+  style={{
+    marginTop: 20,
+    background: '#f8fafc',
+    borderRadius: 24,
+    padding: 15,
+  }}
+>
+  <h2
+    style={{
+      marginBottom: 20,
+    }}
+  >
+    Popular Word Searches
+  </h2>
+
+  <div
+    style={{
+      display: 'flex',
+      flexWrap: 'wrap',
+      gap: 14,
+    }}
+  >
+    {[
+      {
+        label: '5 Letter Words',
+        href: '/5-letter-words',
+      },
+      {
+        label: 'Words Starting With Q',
+        href: '/words-starting-with/q',
+      },
+      {
+        label: '2 Letter Words',
+        href: '/2-letter-words',
+      },
+      {
+        label: 'Highest Scoring Words',
+        href: '/highest-scoring-words',
+      },
+      {
+        label: 'Words Containing TH',
+        href: '/words-containing/th',
+      },
+      {
+        label: 'Wordle Solver',
+        href: '/wordle-solver',
+      },
+      {
+        label: 'Words Ending With ING',
+        href: '/words-ending-with/ing',
+      },
+      {
+        label: 'Q Words Without U',
+        href: '/guides/q-without-u-words',
+      },
+    ].map((item) => (
+      <Link
+        key={item.href}
+        href={item.href}
+        onMouseEnter={(e) => {
+  e.currentTarget.style.transform = 'translateY(-4px)'
+  e.currentTarget.style.boxShadow =
+    '0 8px 24px rgba(0,0,0,0.10)'
+}}
+
+onMouseLeave={(e) => {
+  e.currentTarget.style.transform = 'translateY(0)'
+  e.currentTarget.style.boxShadow =
+    '0 2px 10px rgba(0,0,0,0.05)'
+}}
+        style={{
+          padding: '12px 18px',
+          background: '#fff',
+          border: '1px solid #ddd',
+          borderRadius: 999,
+          textDecoration: 'none',
+          color: '#111',
+          fontWeight: 600,
+          boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
+        }}
+      >
+        {item.label}
+      </Link>
+    ))}
+  </div>
+</section>
+
       <section style={{ marginBottom: 50 }}>
         <h2>Browse By Letter</h2>
 
@@ -143,7 +247,258 @@ export default function Home() {
         </div>
       </section>
 
-      <section>
+      <section
+  style={{
+    marginTop: 20,
+    background: '#fff',
+    borderRadius: 24,
+    padding: 15,
+  }}
+>
+  <h2>How WordUnscramblr Works</h2>
+
+  <div
+    style={{
+      display: 'grid',
+      gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+      gap: 20,
+      marginTop: 24,
+    }}
+  >
+    {[
+      {
+        title: 'Enter Your Letters',
+        text: 'Type the letters you have into the search box to find possible words.',
+      },
+      {
+        title: 'Find Matching Words',
+        text: 'Browse words by length, score, starting letter, ending letter, or pattern.',
+      },
+      {
+        title: 'Use Game Tools',
+        text: 'Try the Wordle Solver, Scrabble tools, and word lists to narrow results.',
+      },
+    ].map((item) => (
+      <div
+        key={item.title}
+        style={{
+          border: '1px solid #ddd',
+          borderRadius: 18,
+          padding: 24,
+          background: '#f8fafc',
+        }}
+      >
+        <h3>{item.title}</h3>
+        <p style={{ color: '#555', lineHeight: 1.6 }}>
+          {item.text}
+        </p>
+      </div>
+    ))}
+  </div>
+</section>
+
+      <section
+  style={{
+    marginTop: 20,
+    background: '#f8fafc',
+    borderRadius: 24,
+    padding: 15,
+  }}
+>
+  <h2
+    style={{
+      marginBottom: 30,
+    }}
+  >
+    Featured Word Tools
+  </h2>
+
+  <div
+    style={{
+      transform: 'translateY(0)',
+      transition: 'all 0.2s ease',
+      display: 'grid',
+      gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
+      gap: 20,
+    }}
+
+  >
+    {[
+      {
+        title: 'Wordle Solver',
+        href: '/wordle-solver',
+        description:
+          'Solve Wordle puzzles using green, yellow, and excluded letters.',
+      },
+      {
+        title: 'Words From Letters',
+        href: '/words-from-letters/listen',
+        description:
+          'Generate playable words from any group of letters.',
+      },
+      {
+        title: 'Best Wordle Starting Words',
+        href: '/best-wordle-starting-words',
+        description:
+          'Discover strong opening guesses and Wordle strategies.',
+      },
+      {
+        title: 'Highest Scoring Words',
+        href: '/highest-scoring-words',
+        description:
+          'Find high-value Scrabble words and scoring opportunities.',
+      },
+    ].map((item) => (
+      <Link
+        key={item.href}
+        href={item.href}
+        onMouseEnter={(e) => {
+  e.currentTarget.style.transform = 'translateY(-4px)'
+  e.currentTarget.style.boxShadow =
+    '0 8px 24px rgba(0,0,0,0.10)'
+}}
+
+onMouseLeave={(e) => {
+  e.currentTarget.style.transform = 'translateY(0)'
+  e.currentTarget.style.boxShadow =
+    '0 2px 10px rgba(0,0,0,0.05)'
+}}
+        style={{
+          border: '1px solid #ddd',
+          borderRadius: 18,
+          padding: 24,
+          textDecoration: 'none',
+          color: '#111',
+          background: '#fff',
+          boxShadow: '0 2px 10px rgba(0,0,0,0.05)',
+          transition: 'all 0.2s ease',
+        }}
+      >
+        <h3
+          style={{
+            marginBottom: 12,
+          }}
+        >
+          {item.title}
+        </h3>
+
+        <p
+          style={{
+            color: '#555',
+            lineHeight: 1.6,
+          }}
+        >
+          {item.description}
+        </p>
+      </Link>
+    ))}
+  </div>
+</section>
+
+<section
+  style={{
+    marginTop: 20,
+    background: '#f8fafc',
+    borderRadius: 24,
+    padding: 15,
+  }}
+>
+  <h2
+    style={{
+      marginBottom: 30,
+    }}
+  >
+    Featured Guides
+  </h2>
+
+  <div
+    style={{
+      transform: 'translateY(0)',
+      transition: 'all 0.2s ease',
+      display: 'grid',
+      gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
+      gap: 20,
+    }}
+  >
+    {[
+      {
+        title: 'How To Win Wordle',
+        href: '/guides/how-to-win-wordle',
+        description:
+          'Learn practical strategies for solving Wordle puzzles more consistently.',
+      },
+      {
+        title: 'Best Wordle Strategies',
+        href: '/guides/best-wordle-strategies',
+        description:
+          'Discover advanced Wordle tactics and smarter guessing techniques.',
+      },
+      {
+        title: 'Q Words Without U',
+        href: '/guides/q-without-u-words',
+        description:
+          'Master useful Q words that do not require a U in Scrabble.',
+      },
+      {
+        title: 'Best Scrabble Words',
+        href: '/guides/best-scrabble-words',
+        description:
+          'Improve your Scrabble game with high-value words and scoring tips.',
+      },
+    ].map((item) => (
+      <Link
+        key={item.href}
+        href={item.href}
+        onMouseEnter={(e) => {
+  e.currentTarget.style.transform = 'translateY(-4px)'
+  e.currentTarget.style.boxShadow =
+    '0 8px 24px rgba(0,0,0,0.10)'
+}}
+
+onMouseLeave={(e) => {
+  e.currentTarget.style.transform = 'translateY(0)'
+  e.currentTarget.style.boxShadow =
+    '0 2px 10px rgba(0,0,0,0.05)'
+}}
+        style={{
+          border: '1px solid #ddd',
+          borderRadius: 18,
+          padding: 24,
+          textDecoration: 'none',
+          color: '#111',
+          background: '#fff',
+          boxShadow: '0 2px 10px rgba(0,0,0,0.05)',
+          transition: 'all 0.2s ease',
+        }}
+      >
+        <h3
+          style={{
+            marginBottom: 30,
+          }}
+        >
+          {item.title}
+        </h3>
+
+        <p
+          style={{
+            color: '#555',
+            lineHeight: 1.6,
+          }}
+        >
+          {item.description}
+        </p>
+      </Link>
+    ))}
+  </div>
+</section>
+
+       <section
+  style={{
+    marginTop: 30,
+    lineHeight: 1.8,
+  }}
+>
+
         <h2>About WordUnscramblr</h2>
 
         <p>
@@ -158,7 +513,7 @@ export default function Home() {
       </section>
       <section
   style={{
-    marginTop: 60,
+    marginTop: 30,
     lineHeight: 1.8,
   }}
 >

@@ -1,35 +1,57 @@
 import Link from 'next/link'
 
+const links = [
+  {
+    href: '/',
+    label: 'Home',
+  },
+  {
+    href: '/wordle-solver',
+    label: 'Wordle Solver',
+  },
+  {
+    href: '/word-lists',
+    label: 'Word Lists',
+  },
+  {
+    href: '/guides',
+    label: 'Guides',
+  },
+]
+
 export default function Header() {
   return (
     <header
       style={{
-        borderBottom: '1px solid #ddd',
-        padding: '16px 24px',
-        marginBottom: 30,
+        background: '#fff',
+        borderBottom: '1px solid #e5e7eb',
+        position: 'sticky',
+        top: 0,
+        zIndex: 100,
       }}
     >
       <div
         style={{
           maxWidth: 1200,
           margin: '0 auto',
+          padding: '18px 24px',
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
-          flexWrap: 'wrap',
-          gap: 16,
+          gap: 24,
         }}
       >
         <Link
           href="/"
           style={{
-            fontSize: 28,
-            fontWeight: 'bold',
             textDecoration: 'none',
-            color: '#111',
+            fontSize: 28,
+            fontWeight: 800,
+            color: '#111827',
+            letterSpacing: '-0.03em',
           }}
         >
-          WordUnscramblr
+          Word<span style={{ color: '#6aaa64' }}>Unscramblr</span>
         </Link>
 
         <nav
@@ -38,33 +60,21 @@ export default function Header() {
             gap: 20,
             flexWrap: 'wrap',
           }}
-        > 
-          <Link href="/word-lists">
-  Word Lists
-</Link>
-          <Link href="/wordle-solver">
-            Wordle Solver
-          </Link>
-
-          <Link href="/best-wordle-starting-words">
-            Best Starters
-          </Link>
-
-          <Link href="/scrabble-word-finder">
-            Scrabble Finder
-          </Link>
-
-          <Link href="/5-letter-words">
-            5 Letter Words
-          </Link>
-
-          <Link href="/highest-scoring-words">
-            High Scoring Words
-          </Link>
-
-          <Link href="/guides">
-            Word Game Guides</Link>
-                 </nav>
+        >
+          {links.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              style={{
+                textDecoration: 'none',
+                color: '#374151',
+                fontWeight: 600,
+              }}
+            >
+              {link.label}
+            </Link>
+          ))}
+        </nav>
       </div>
     </header>
   )
