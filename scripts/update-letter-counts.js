@@ -13,17 +13,17 @@ const supabase = createClient(
   }
 )
 
-const letters = 'abcdefghijklmnopqrstuvwxyz'.split('')
+const alphabet = 'abcdefghijklmnopqrstuvwxyz'.split('')
 
 function getCounts(word) {
   const counts = {}
 
-  letters.forEach((letter) => {
+  alphabet.forEach((letter) => {
     counts[`${letter}_count`] = 0
   })
 
-  word.split('').forEach((letter) => {
-    if (counts[`${letter}_count`] !== undefined) {
+  word.toLowerCase().split('').forEach((letter) => {
+    if (alphabet.includes(letter)) {
       counts[`${letter}_count`] += 1
     }
   })
@@ -40,6 +40,7 @@ async function run() {
     const { data, error } = await supabase
       .from('words')
       .select('id, word')
+      .order('id', { ascending: true })
       .range(from, from + pageSize - 1)
 
     if (error) throw error
@@ -65,11 +66,7 @@ async function run() {
 }
 
 run().catch((error) => {
-
   console.error('Script failed:')
-
   console.error(JSON.stringify(error, null, 2))
-
   process.exit(1)
-
 })

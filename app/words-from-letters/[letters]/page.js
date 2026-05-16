@@ -2,7 +2,8 @@ import { supabase } from '@/lib/supabase'
 import WordList from '@/components/WordList'
 import InternalLinks from '@/components/InternalLinks'
 import JsonLd from '@/components/JsonLd'
-import { canMakeWord } from '@/lib/canMakeWord'
+
+const alphabet = 'abcdefghijklmnopqrstuvwxyz'.split('')
 
 export async function generateMetadata({ params }) {
   const resolvedParams = await params
@@ -18,51 +19,35 @@ export default async function Page({ params }) {
   const resolvedParams = await params
 
   const letters = (resolvedParams.letters || '')
- .toLowerCase()
- .replace(/[^a-z]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z]/g, '')
 
-const maxLength = letters.length
+  const maxLength = letters.length
 
-const letterCounts = {}
+  const letterCounts = {}
 
-'abcdefghijklmnopqrstuvwxyz'.split('').forEach((letter) => {
-  letterCounts[letter] = 0
-})
+  alphabet.forEach((letter) => {
+    letterCounts[letter] = 0
+  })
 
-letters.split('').forEach((letter) => {
-  letterCounts[letter] += 1
-})
+  letters.split('').forEach((letter) => {
+    letterCounts[letter] += 1
+  })
 
-let query = supabase
-  .from('words')
-  .select('word, scrabble_score, frequency, length')
-  .lte('length', maxLength)
+  let query = supabase
+    .from('words')
+    .select('word, scrabble_score, frequency, length')
+    .lte('length', maxLength)
 
-Object.entries(letterCounts).forEach(([letter, count]) => {
-  query = query.lte(`${letter}_count`, count)
-})
+  alphabet.forEach((letter) => {
+    query = query.lte(`${letter}_count`, letterCounts[letter])
+  })
 
-const { data, error } = await query
-  .order('length', { ascending: false })
-  .order('scrabble_score', { ascending: false })
-  .order('frequency', { ascending: false })
-  .limit(500)
-
-const filteredWords = data || []
-
-    .filter((item) => canMakeWord(item.word, letters))
-    .sort((a, b) => {
-      if (b.word.length !== a.word.length) {
-        return b.word.length - a.word.length
-      }
-
-      if (b.scrabble_score !== a.scrabble_score) {
-        return b.scrabble_score - a.scrabble_score
-      }
-
-      return b.frequency - a.frequency
-    })
-    .slice(0, 500)
+  const { data, error } = await query
+    .order('length', { ascending: false })
+    .order('scrabble_score', { ascending: false })
+    .order('frequency', { ascending: false })
+    .limit(500)
 
   return (
     <>
@@ -90,7 +75,7 @@ const filteredWords = data || []
           </p>
         )}
 
-        <WordList words={filteredWords} />
+        <WordList words={data || []} />
 
         <InternalLinks letters={letters} length={letters.length} />
       </main>
