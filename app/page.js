@@ -297,6 +297,56 @@ onMouseLeave={(e) => {
   </div>
 </section>
 
+<section
+  style={{
+    marginTop: 20,
+    background: '#f8fafc',
+    borderRadius: 24,
+    padding: 15,
+  }}
+>
+  <h2>Why Use WordUnscramblr?</h2>
+
+  <div
+    style={{
+      display: 'grid',
+      gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+      gap: 20,
+      marginTop: 20,
+    }}
+  >
+    {[
+      {
+        title: 'Fast Word Finding',
+        text: 'Quickly discover words from letters, patterns, prefixes, suffixes, and word lengths.',
+      },
+      {
+        title: 'Game-Focused Tools',
+        text: 'Use tools built for Wordle, Scrabble, crossword puzzles, and other word games.',
+      },
+      {
+        title: 'Helpful Word Guides',
+        text: 'Learn strategies, scoring tips, and word game techniques with practical guides.',
+      },
+    ].map((item) => (
+      <div
+        key={item.title}
+        style={{
+          background: '#fff',
+          border: '1px solid #ddd',
+          borderRadius: 18,
+          padding: 15,
+        }}
+      >
+        <h3>{item.title}</h3>
+        <p style={{ color: '#555', lineHeight: 1.6 }}>
+          {item.text}
+        </p>
+      </div>
+    ))}
+  </div>
+</section>
+
       <section
   style={{
     marginTop: 20,
