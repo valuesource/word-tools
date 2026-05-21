@@ -398,6 +398,12 @@ onMouseLeave={(e) => {
         description:
           'Find high-value Scrabble words and scoring opportunities.',
       },
+      {
+  title: 'Word Of The Day',
+  href: '/word-of-the-day',
+  description:
+    'Discover a featured word every day with scores and word-game insights.',
+},
     ].map((item) => (
       <Link
         key={item.href}

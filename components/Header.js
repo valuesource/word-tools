@@ -17,6 +17,10 @@ const links = [
     href: '/guides',
     label: 'Guides',
   },
+  {
+  href: '/word-of-the-day',
+  label: 'Word Of The Day',
+},
 ]
 
 export default function Header() {
