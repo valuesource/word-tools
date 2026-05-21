@@ -15,6 +15,10 @@ export const metadata = {
     'Discover a new featured word every day with definitions, scores, and word game insights.',
 }
 
+function getDefinition(word) {
+  return `${word.toUpperCase()} is a playable word found in word-game dictionaries. It may be useful for Scrabble, crossword puzzles, anagrams, and other word-solving games.`
+}
+
 export default async function WordOfTheDayPage() {
   const day = getDayOfYear()
 
@@ -41,6 +45,8 @@ export default async function WordOfTheDayPage() {
   }
 
   const word = data.word.toUpperCase()
+
+  const definition = getDefinition(data.word)
 
   return (
     <main className="page">
@@ -97,6 +103,18 @@ export default async function WordOfTheDayPage() {
             <strong>Frequency</strong>
             <div>{data.frequency}</div>
           </div>
+        </div>
+      <div
+          style={{
+            marginTop: 40,
+            fontSize: 20,
+            color: '#555',
+            lineHeight: 1.8,
+            maxWidth: 760,
+            marginInline: 'auto',
+          }}
+        >
+          {definition}
         </div>
       </section>
 
