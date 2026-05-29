@@ -102,36 +102,6 @@ export default function Home() {
         </button>
       </form>
 
-      <section style={{ marginBottom: 50 }}>
-        <h2>Popular Word Lists</h2>
-
-        <ul>
-          <li><Link href="/3-letter-words">3 Letter Words</Link></li>
-          <li><Link href="/4-letter-words">4 Letter Words</Link></li>
-          <li><Link href="/5-letter-words">5 Letter Words</Link></li>
-          <li><Link href="/6-letter-words">6 Letter Words</Link></li>
-          <li><Link href="/7-letter-words">7 Letter Words</Link></li>
-        <li><Link href="/highest-scoring-words">Highest Scoring Words</Link></li>
-        <li><Link href="/wordle-helper">Wordle Helper</Link></li>
-        <li><Link href="/scrabble-word-finder">Scrabble Word Finder</Link></li>
-        <li><Link href="/best-wordle-starting-words">Best Wordle Starting Words</Link></li>
-        <li><Link href="/guides">Word Game Guides</Link></li>
-        
-        </ul>
-      </section>
-
-      <section style={{ marginBottom: 50 }}>
-        <h2>Popular Letter Patterns</h2>
-
-        <ul>
-          <li><Link href="/words-containing/th">Words Containing TH</Link></li>
-          <li><Link href="/words-containing/qu">Words Containing QU</Link></li>
-          <li><Link href="/words-containing/ing">Words Containing ING</Link></li>
-          <li><Link href="/words-containing/tion">Words Containing TION</Link></li>
-          <li><Link href="/words-containing/er">Words Containing ER</Link></li>
-        </ul>
-      </section>
-
       <section
   style={{
     marginTop: 20,
@@ -586,35 +556,60 @@ onMouseLeave={(e) => {
     of words containing specific letters, our tools are designed to
     help players solve word games more efficiently.
   </p>
+  </section>
 
-  <h3>Popular Word Tools</h3>
+ <section
+  style={{
+    marginBottom: 50,
+    background: '#fff',
+    borderRadius: 24,
+    padding: 24,
+  }}
+>
+  <div
+    style={{
+      display: 'grid',
+      gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
+      gap: 30,
+    }}
+  >
+    <div>
+      <h2>Popular Word Tools</h2>
+      <ul>
+        <li><Link href="/wordle-solver">Wordle Solver</Link></li>
+        <li><Link href="/scrabble-word-finder">Scrabble Word Finder</Link></li>
+        <li><Link href="/highest-scoring-words">Highest Scoring Words</Link></li>
+        <li><Link href="/words-from-letters/listen">Words From Letters</Link></li>
+        <li><Link href="/word-of-the-day">Word Of The Day</Link></li>
+      </ul>
+    </div>
 
-  <ul>
-    <li>
-      <Link href="/wordle-solver">
-        Wordle Solver
-      </Link>
-    </li>
+    <div>
+      <h2>Popular Word Lists</h2>
+      <ul>
+        <li><Link href="/2-letter-words">2 Letter Words</Link></li>
+        <li><Link href="/3-letter-words">3 Letter Words</Link></li>
+        <li><Link href="/4-letter-words">4 Letter Words</Link></li>
+        <li><Link href="/5-letter-words">5 Letter Words</Link></li>
+        <li><Link href="/6-letter-words">6 Letter Words</Link></li>
+        <li><Link href="/7-letter-words">7 Letter Words</Link></li>
+      </ul>
+    </div>
 
-    <li>
-      <Link href="/best-wordle-starting-words">
-        Best Wordle Starting Words
-      </Link>
-    </li>
+    <div>
+      <h2>Popular Letter Patterns</h2>
+      <ul>
+        <li><Link href="/words-containing/th">Words Containing TH</Link></li>
+        <li><Link href="/words-containing/qu">Words Containing QU</Link></li>
+        <li><Link href="/words-containing/ing">Words Containing ING</Link></li>
+        <li><Link href="/words-containing/tion">Words Containing TION</Link></li>
+        <li><Link href="/words-containing/er">Words Containing ER</Link></li>
+      </ul>
+    </div>
+  </div>
+</section>
 
-    <li>
-      <Link href="/highest-scoring-words">
-        Highest Scoring Scrabble Words
-      </Link>
-    </li>
-
-    <li>
-      <Link href="/word-lists">
-        Word Lists
-      </Link>
-    </li>
-  </ul>
-
+<section>
   <h3>How Our Word Solver Works</h3>
 
   <p>
