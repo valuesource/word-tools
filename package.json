@@ -17,6 +17,7 @@
     "nspell": "^2.1.5",
     "react": "19",
     "react-dom": "19",
+    "resend": "^6.12.4",
     "ws": "^8.20.0"
   },
   "devDependencies": {

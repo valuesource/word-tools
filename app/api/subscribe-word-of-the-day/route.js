@@ -8,9 +8,13 @@ export async function POST(request) {
     return Response.redirect('https://wordunscramblr.net/word-of-the-day?error=invalid', 303)
   }
 
-  await supabase
+  const { error } = await supabase
     .from('word_of_day_subscribers')
     .upsert({ email }, { onConflict: 'email' })
+
+  if (error) {
+    return Response.redirect('https://wordunscramblr.net/word-of-the-day?error=signup', 303)
+  }
 
   return Response.redirect('https://wordunscramblr.net/word-of-the-day?subscribed=true', 303)
 }
