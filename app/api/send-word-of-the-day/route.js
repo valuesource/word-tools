@@ -13,8 +13,12 @@ function getDayOfYear(date = new Date()) {
   return Math.floor(diff / oneDay)
 }
 
-function buildEmailHtml(word) {
+function buildEmailHtml(word, subscriber) {
+  const unsubscribeUrl =
+    `https://wordunscramblr.net/unsubscribe/${subscriber.unsubscribe_token}`
+
   return `
+
     <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #111;">
       <h1>Word Of The Day: ${word.word.toUpperCase()}</h1>
 
@@ -33,6 +37,11 @@ function buildEmailHtml(word) {
       <p>
         View more word tools:
         <a href="https://wordunscramblr.net/word-of-the-day">Word Of The Day</a>
+      </p>
+            <p style="font-size:12px;color:#666;margin-top:30px;">
+        You are receiving this because you subscribed to WordUnscramblr Word Of The Day.
+        <br />
+        <a href="${unsubscribeUrl}">Unsubscribe</a>
       </p>
     </div>
   `
@@ -58,10 +67,11 @@ return Response.json({ error: 'Unauthorized' }, { status: 401 })
   const index = getDayOfYear() % words.length
   const word = words[index]
 
-  const { data: subscribers, error: subscribersError } = await supabaseAdmin
-    .from('word_of_day_subscribers')
-    .select('email')
-
+const { data: subscribers, error: subscribersError } = await supabaseAdmin
+  .from('word_of_day_subscribers')
+  .select('email, unsubscribe_token')
+  .is('unsubscribed_at', null)
+  
   if (subscribersError) {
     return Response.json({ error: subscribersError.message }, { status: 500 })
   }
@@ -73,7 +83,7 @@ return Response.json({ error: 'Unauthorized' }, { status: 401 })
       from: 'WordUnscramblr <word@wordunscramblr.net>',
       to: subscriber.email,
       subject: `Word Of The Day: ${word.word.toUpperCase()}`,
-      html: buildEmailHtml(word),
+     html: buildEmailHtml(word, subscriber),
     })
   }
 

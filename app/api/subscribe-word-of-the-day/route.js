@@ -11,9 +11,18 @@ export async function POST(request) {
     )
   }
 
-  const { error } = await supabaseAdmin
-    .from('word_of_day_subscribers')
-    .upsert({ email }, { onConflict: 'email' })
+  const token = crypto.randomUUID()
+
+const { error } = await supabaseAdmin
+  .from('word_of_day_subscribers')
+  .upsert(
+    {
+      email,
+      unsubscribe_token: token,
+      unsubscribed_at: null,
+    },
+    { onConflict: 'email' }
+  )
 
   if (error) {
     return Response.redirect(
