@@ -1,5 +1,5 @@
 import { Resend } from 'resend'
-import { supabase } from '@/lib/supabase'
+import { supabaseAdmin } from '@/lib/supabaseAdmin'
 
 export const dynamic = 'force-dynamic'
 
@@ -46,7 +46,7 @@ export async function GET(request) {
 return Response.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
-  const { data: words, error: wordsError } = await supabase
+  const { data: words, error: wordsError } = await supabaseAdmin
     .from('daily_words')
     .select('*')
     .order('id')
@@ -58,7 +58,7 @@ return Response.json({ error: 'Unauthorized' }, { status: 401 })
   const index = getDayOfYear() % words.length
   const word = words[index]
 
-  const { data: subscribers, error: subscribersError } = await supabase
+  const { data: subscribers, error: subscribersError } = await supabaseAdmin
     .from('word_of_day_subscribers')
     .select('email')
 
