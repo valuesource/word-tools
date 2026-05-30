@@ -43,7 +43,7 @@ export async function GET(request) {
   const expected = `Bearer ${process.env.CRON_SECRET}`
 
   if (authHeader !== expected) {
-    return Response.json({ error: 'Unauthorized' }, { status: 401 })
+return Response.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
   const { data: words, error: wordsError } = await supabase
@@ -81,4 +81,4 @@ export async function GET(request) {
     sent: emails.length,
     word: word.word,
   })
-}
+  }
