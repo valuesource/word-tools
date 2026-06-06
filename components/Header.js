@@ -21,6 +21,10 @@ const links = [
   href: '/word-of-the-day',
   label: 'Word Of The Day',
 },
+ {
+  href: '/crossword',
+  label: 'The Daily Grid',
+},
 ]
 
 export default function Header() {

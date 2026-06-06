@@ -374,6 +374,12 @@ onMouseLeave={(e) => {
   description:
     'Discover a featured word every day with scores and word-game insights.',
 },
+{
+  title: 'The Daily Grid Crossword',
+  href: '/crossword',
+  description:
+    'A challeging puzzle every day. Progress saved automatically. Replay past days from our archive.',
+},
     ].map((item) => (
       <Link
         key={item.href}

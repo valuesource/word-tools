@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>The Daily Grid — A Crossword That Changes Every Day</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,900;1,9..144,500&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Archivo:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#f3ecdd;
+    --paper-2:#ece2cd;
+    --ink:#1c1813;
+    --ink-soft:#5d5447;
+    --line:#cdbfa3;
+    --accent:#bb3b22;
+    --accent-soft:#e7c9bf;
+    --highlight:#f6e3a6;
+    --highlight-2:#efd06b;
+    --good:#3f7d4f;
+    --shadow:rgba(28,24,19,.22);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:
+      radial-gradient(120% 120% at 0% 0%, #f7f1e4 0%, var(--paper) 55%, var(--paper-2) 100%);
+    color:var(--ink);
+    font-family:"Newsreader",Georgia,serif;
+    -webkit-font-smoothing:antialiased;
+    min-height:100vh;
+    padding:22px clamp(12px,3vw,40px) 60px;
+    position:relative;
+  }
+  body::before{
+    content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    mix-blend-mode:multiply;opacity:.6;
+  }
+  .wrap{max-width:980px;margin:0 auto;position:relative;z-index:1;}
+
+  /* Masthead */
+  header.mast{text-align:center;border-bottom:3px double var(--ink);padding-bottom:14px;}
+  .kicker{font-family:"Archivo",sans-serif;letter-spacing:.42em;text-transform:uppercase;font-size:11px;color:var(--accent);font-weight:700;}
+  h1{
+    font-family:"Fraunces",serif;font-weight:900;font-size:clamp(38px,8vw,76px);
+    line-height:.92;margin:6px 0 4px;letter-spacing:-.01em;
+  }
+  h1 em{font-style:italic;font-weight:500;color:var(--accent);}
+  .dateline{display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap;margin-top:8px;
+    font-style:italic;color:var(--ink-soft);font-size:15px;}
+  .dateline .rule{flex:0 0 40px;height:1px;background:var(--line);}
+
+  /* Date navigation */
+  .nav{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;margin:16px 0 6px;}
+  .nav button, .btn{
+    font-family:"Archivo",sans-serif;font-weight:600;font-size:13px;letter-spacing:.02em;
+    background:var(--paper);border:1.5px solid var(--ink);color:var(--ink);
+    padding:8px 14px;border-radius:2px;cursor:pointer;transition:all .12s ease;
+    box-shadow:2px 2px 0 var(--ink);
+  }
+  .nav button:hover, .btn:hover{transform:translate(1px,1px);box-shadow:1px 1px 0 var(--ink);}
+  .nav button:active, .btn:active{transform:translate(2px,2px);box-shadow:0 0 0 var(--ink);}
+  .nav button:disabled{opacity:.35;cursor:not-allowed;box-shadow:2px 2px 0 var(--line);border-color:var(--line);}
+  .nav button.today{background:var(--ink);color:var(--paper);}
+  input[type=date]{
+    font-family:"Archivo",sans-serif;font-size:13px;border:1.5px solid var(--ink);background:var(--paper);
+    padding:7px 10px;border-radius:2px;color:var(--ink);
+  }
+  .pill{font-family:"Archivo",sans-serif;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+    padding:3px 9px;border-radius:99px;border:1.5px solid var(--accent);color:var(--accent);background:var(--accent-soft);}
+  .pill.solved{border-color:var(--good);color:var(--good);background:#d8e6d8;}
+
+  /* Layout */
+  .board{display:grid;grid-template-columns:minmax(0,auto) minmax(260px,1fr);gap:clamp(18px,3vw,40px);margin-top:26px;align-items:start;}
+  @media(max-width:760px){ .board{grid-template-columns:1fr;} }
+
+  /* Grid */
+  .gridwrap{display:flex;flex-direction:column;align-items:center;gap:14px;}
+  .grid{
+    display:grid;gap:0;background:var(--ink);border:3px solid var(--ink);
+    box-shadow:7px 9px 0 var(--shadow);
+    width:min(92vw,520px);
+  }
+  .cell{position:relative;aspect-ratio:1/1;background:var(--paper);border:1px solid #b8aa8d;
+    display:flex;align-items:center;justify-content:center;cursor:pointer;user-select:none;}
+  .cell.block{background:var(--ink);border-color:var(--ink);cursor:default;}
+  .cell .num{position:absolute;top:1px;left:3px;font-family:"Archivo",sans-serif;font-size:clamp(8px,1.7vw,11px);
+    color:var(--ink-soft);font-weight:600;line-height:1;}
+  .cell .ltr{font-family:"Archivo",sans-serif;font-weight:600;text-transform:uppercase;
+    font-size:clamp(15px,4.4vw,26px);color:var(--ink);margin-top:3px;}
+  .cell.hl{background:var(--highlight);}
+  .cell.sel{background:var(--highlight-2);box-shadow:inset 0 0 0 2.5px var(--accent);}
+  .cell.wrong .ltr{color:var(--accent);}
+  .cell.wrong{background:#f3d9d2;}
+
+  /* Active clue banner */
+  .activeclue{width:min(92vw,520px);background:var(--ink);color:var(--paper);padding:10px 14px;border-radius:2px;
+    font-size:16px;min-height:44px;display:flex;align-items:center;gap:10px;box-shadow:4px 4px 0 var(--shadow);}
+  .activeclue b{font-family:"Archivo",sans-serif;font-size:12px;letter-spacing:.06em;background:var(--accent);
+    padding:3px 8px;border-radius:2px;white-space:nowrap;}
+  .activeclue span{font-style:italic;}
+
+  .tools{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;width:min(92vw,520px);}
+
+  /* Unscramble hint */
+  .hintbox{width:min(92vw,520px);border:1.5px dashed var(--accent);background:var(--accent-soft);
+    border-radius:3px;padding:12px 14px;font-size:14px;color:var(--ink);display:none;}
+  .hintbox.on{display:block;}
+  .hintbox .letters{font-family:"Archivo",sans-serif;font-weight:700;letter-spacing:.34em;font-size:22px;
+    text-transform:uppercase;margin:6px 0 10px;color:var(--accent);}
+  .hintbox .links{display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
+  .hintbox a{font-family:"Archivo",sans-serif;font-weight:600;font-size:12.5px;color:var(--ink);text-decoration:none;
+    border-bottom:2px solid var(--accent);padding-bottom:1px;}
+  .hintbox a:hover{color:var(--accent);}
+  .copied{font-family:"Archivo",sans-serif;font-size:11px;color:var(--good);font-weight:700;opacity:0;transition:opacity .2s;}
+  .copied.show{opacity:1;}
+
+  /* Clues */
+  .clues{display:grid;grid-template-columns:1fr 1fr;gap:22px;}
+  @media(max-width:760px){ .clues{grid-template-columns:1fr;} }
+  .cluecol h2{font-family:"Fraunces",serif;font-weight:900;font-size:20px;margin:0 0 8px;
+    border-bottom:2px solid var(--ink);padding-bottom:4px;display:flex;align-items:center;gap:8px;}
+  .cluecol h2 .dot{width:9px;height:9px;background:var(--accent);border-radius:50%;}
+  ol.cluelist{list-style:none;margin:0;padding:0;}
+  ol.cluelist li{display:flex;gap:8px;padding:5px 6px;cursor:pointer;border-radius:2px;line-height:1.3;font-size:15.5px;}
+  ol.cluelist li:hover{background:var(--paper-2);}
+  ol.cluelist li.active{background:var(--highlight);box-shadow:inset 3px 0 0 var(--accent);}
+  ol.cluelist li.done{color:var(--ink-soft);text-decoration:line-through;text-decoration-color:var(--accent);}
+  ol.cluelist li .n{font-family:"Archivo",sans-serif;font-weight:700;min-width:20px;text-align:right;}
+
+  /* Archive panel */
+  .panel{position:fixed;inset:0;background:rgba(28,24,19,.5);display:none;align-items:flex-start;justify-content:center;
+    z-index:20;padding:40px 16px;overflow:auto;}
+  .panel.on{display:flex;}
+  .panelcard{background:var(--paper);border:3px solid var(--ink);box-shadow:9px 11px 0 var(--shadow);
+    max-width:520px;width:100%;padding:22px 24px;border-radius:3px;}
+  .panelcard h3{font-family:"Fraunces",serif;font-weight:900;font-size:26px;margin:0 0 4px;}
+  .panelcard .sub{font-style:italic;color:var(--ink-soft);margin-bottom:16px;font-size:14px;}
+  .arclist{list-style:none;margin:0;padding:0;max-height:46vh;overflow:auto;}
+  .arclist li{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 4px;
+    border-bottom:1px solid var(--line);cursor:pointer;font-size:15px;}
+  .arclist li:hover{background:var(--paper-2);}
+  .arclist .when{font-family:"Archivo",sans-serif;}
+  .arcempty{color:var(--ink-soft);font-style:italic;padding:14px 2px;}
+  .closebar{display:flex;justify-content:flex-end;margin-top:16px;}
+
+  /* Win toast */
+  .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(140%);
+    background:var(--ink);color:var(--paper);padding:14px 22px;border-radius:3px;z-index:30;
+    box-shadow:5px 6px 0 var(--shadow);font-family:"Fraunces",serif;font-size:18px;font-weight:600;
+    transition:transform .35s cubic-bezier(.2,1.2,.3,1);display:flex;align-items:center;gap:10px;}
+  .toast.on{transform:translateX(-50%) translateY(0);}
+  .toast .star{color:var(--highlight-2);}
+
+  footer{margin-top:40px;text-align:center;color:var(--ink-soft);font-size:12.5px;font-style:italic;
+    border-top:1px solid var(--line);padding-top:14px;}
+  .hiddeninput{position:absolute;opacity:0;height:0;width:0;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="mast">
+    <div class="kicker">Est. Today · No. <span id="issue">1</span></div>
+    <h1>The Daily <em>Grid</em></h1>
+    <div class="dateline">
+      <span class="rule"></span>
+      <span id="dateline">Loading the day's puzzle…</span>
+      <span class="rule"></span>
+    </div>
+  </header>
+
+  <div class="nav">
+    <button id="prev" title="Previous day">‹ Prev</button>
+    <button id="todayBtn" class="today">Today</button>
+    <button id="next" title="Next day">Next ›</button>
+    <input type="date" id="datepick" />
+    <button id="archiveBtn" class="btn">📚 Archive</button>
+    <span id="statuspill" class="pill">In progress</span>
+  </div>
+
+  <div class="board">
+    <div class="gridwrap">
+      <div class="activeclue" id="activeclue"><b>—</b><span>Tap a square to begin.</span></div>
+      <div class="grid" id="grid"></div>
+      <div class="tools">
+        <button class="btn" id="checkBtn">Check</button>
+        <button class="btn" id="revealWordBtn">Reveal word</button>
+        <button class="btn" id="revealAllBtn">Reveal all</button>
+        <button class="btn" id="clearBtn">Clear</button>
+        <button class="btn" id="hintBtn">🔤 Unscramble hint</button>
+      </div>
+      <div class="hintbox" id="hintbox">
+        Hand these letters to a word unscrambler and it will find the answer:
+        <div class="letters" id="hintletters">— — —</div>
+        <div class="links">
+          <button class="btn" id="copyLetters">Copy letters</button>
+          <a id="link1" href="https://wordunscrambleit.com" target="_blank" rel="noopener">wordunscrambleit.com ↗</a>
+          <a id="link2" href="https://wordunscramblr.net" target="_blank" rel="noopener">wordunscramblr.net ↗</a>
+          <span class="copied" id="copied">copied ✓</span>
+        </div>
+      </div>
+      <input class="hiddeninput" id="hidden" autocomplete="off" autocapitalize="characters" />
+    </div>
+
+    <div class="clues">
+      <div class="cluecol">
+        <h2><span class="dot"></span>Across</h2>
+        <ol class="cluelist" id="acrossList"></ol>
+      </div>
+      <div class="cluecol">
+        <h2><span class="dot"></span>Down</h2>
+        <ol class="cluelist" id="downList"></ol>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    A fresh interlocking puzzle is generated for every calendar day. Your progress is saved automatically and
+    every past day is replayable from the Archive. All answers are ordinary dictionary words, so any word‑unscrambler
+    tool will resolve the letters.
+  </footer>
+</div>
+
+<!-- Archive panel -->
+<div class="panel" id="panel">
+  <div class="panelcard">
+    <h3>The Archive</h3>
+    <div class="sub">Every day you've opened. Jump back to any of them.</div>
+    <ul class="arclist" id="arclist"></ul>
+    <div class="closebar"><button class="btn" id="closePanel">Close</button></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"><span class="star">★</span><span id="toasttext">Solved! Beautifully done.</span></div>
+
+<script>
+/* ---------- Storage wrapper (uses artifact persistent storage; falls back to memory) ---------- */
+const Store = {
+  mem:{},
+  ok: (typeof window!=="undefined" && window.storage),
+  async get(k){ try{ if(this.ok){ const r=await window.storage.get(k); return r? r.value:null; } }catch(e){} return (k in this.mem)? this.mem[k]:null; },
+  async set(k,v){ try{ if(this.ok){ await window.storage.set(k,v); return; } }catch(e){} this.mem[k]=v; },
+  async list(prefix){ try{ if(this.ok){ const r=await window.storage.list(prefix); return r? r.keys:[]; } }catch(e){} return Object.keys(this.mem).filter(x=>x.startsWith(prefix)); }
+};
+
+/* ---------- Word + clue bank (common dictionary words) ---------- */
+const BANK = [
+  ["MOUNTAIN","Lofty natural peak"],["BUTTERFLY","Winged garden flutterer"],["ELEPHANT","Trunked giant of the savanna"],
+  ["LIBRARY","House of borrowed books"],["COMPASS","Tool that points north"],["LANTERN","Portable hanging light"],
+  ["ORCHARD","Grove of fruit trees"],["HARBOUR","Sheltered place for ships"],["DIAMOND","Hardest gemstone"],
+  ["JOURNEY","A long trip"],["THUNDER","Storm's loud rumble"],["MEADOW","Grassy open field"],
+  ["CASTLE","Fortified royal home"],["BRIDGE","Span across a river"],["CANDLE","Wax light source"],
+  ["FOREST","Dense stand of trees"],["ISLAND","Land ringed by water"],["WINTER","Coldest season"],
+  ["SUMMER","Warmest season"],["ANCHOR","Ship's holding weight"],["PENCIL","Writer with a lead core"],
+  ["GUITAR","Six‑stringed instrument"],["ROCKET","Spacefaring vessel"],["CAMERA","Photo‑taking device"],
+  ["DOCTOR","Medical professional"],["FLOWER","Blooming plant"],["MARKET","Place to buy and sell"],
+  ["NATURE","The physical world"],["PEPPER","Spicy table seasoning"],["GARDEN","Plot for growing plants"],
+  ["PLANET","Earth, Mars, or Venus"],["ORANGE","Citrus fruit and a colour"],["SILVER","Shiny gray metal"],
+  ["WINDOW","Glass opening in a wall"],["PURPLE","Colour of royalty"],["SUNSET","Day's end on the horizon"],
+  ["VOYAGE","A sea journey"],["MAGNET","It attracts iron"],["KETTLE","Pot for boiling water"],
+  ["RIBBON","Decorative strip of fabric"],["VELVET","Soft plush fabric"],["MELODY","A tune"],
+  ["SUGAR","Sweetener"],["TIGER","Striped big cat"],["LEMON","Sour yellow fruit"],
+  ["HONEY","Bee‑made sweet"],["CLOUD","Sky's fluffy mass"],["STORM","Violent weather"],
+  ["BEACH","Sandy shore"],["TRAIN","Transport on rails"],["HEART","Blood‑pumping organ"],
+  ["LIGHT","Opposite of dark"],["MUSIC","Organized sound"],["PAPER","Sheet for writing"],
+  ["RADIO","Audio broadcast device"],["TABLE","Furniture with a flat top"],["WATER","Plain H2O"],
+  ["APPLE","Doctor‑repelling fruit"],["BREAD","Baker's staple loaf"],["CHAIR","Seat with a back"],
+  ["DANCE","Move to music"],["EAGLE","Soaring bird of prey"],["GRAPE","Wine's source fruit"],
+  ["HOUSE","Place to live"],["JUICE","Squeezed fruit drink"],["KNIFE","Cutting utensil"],
+  ["MONEY","Coins and bills"],["NORTH","Up on a map"],["PIANO","Keyboard instrument"],
+  ["QUEEN","King's counterpart"],["SMILE","Happy expression"],["OCEAN","Vast saltwater body"],
+  ["RIVER","Flowing waterway"],["WHEEL","Round rolling part"],["ZEBRA","Striped African grazer"],
+  ["GOLDEN","Made of a prized metal"],["GINGER","Spicy root, or red‑haired"],["TOMATO","Salad fruit, red and round"],
+  ["SUN","Star at the system's heart"],["SEA","Smaller than an ocean"],["SKY","Where clouds drift"],
+  ["ICE","Frozen water"],["OWL","Nocturnal hooter"],["BEE","Honey maker"],
+  ["ANT","Tiny colony insect"],["OAK","Sturdy hardwood tree"],["CAT","Common feline pet"],
+  ["DOG","Loyal canine pet"],["EAR","Organ of hearing"],["EGG","Breakfast oval"],
+  ["INK","Pen's dark fluid"],["ARC","A curved line"],["ACE","Top playing card"],
+  ["TEA","Steeped hot drink"],["MAP","Guide to places"],["KEY","It opens a lock"]
+];
+const CLUE = {}; BANK.forEach(([w,c])=>CLUE[w]=c);
+
+/* ---------- Seeded RNG ---------- */
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+function shuffle(arr,rng){const a=arr.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(rng()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+
+/* ---------- Crossword generator ---------- */
+function generatePuzzle(seed){
+  const rng=mulberry32(seed);
+  let pool=shuffle(BANK.map(b=>b[0]),rng).slice(0,30);
+  pool.sort((a,b)=>b.length-a.length);
+
+  const cells=new Map();              // "r,c" -> letter
+  const placed=[];
+  const key=(r,c)=>r+","+c;
+  const get=(r,c)=>cells.get(key(r,c));
+
+  // place first word horizontally
+  const first=pool.shift();
+  for(let i=0;i<first.length;i++) cells.set(key(0,i),first[i]);
+  placed.push(first);
+
+  function validate(word,sr,sc,dir){
+    const len=word.length;
+    const before = dir==="A"? get(sr,sc-1) : get(sr-1,sc);
+    const after  = dir==="A"? get(sr,sc+len) : get(sr+len,sc);
+    if(before!=null||after!=null) return null;
+    let inter=0;
+    for(let i=0;i<len;i++){
+      const r= dir==="D"? sr+i : sr;
+      const c= dir==="A"? sc+i : sc;
+      const ex=get(r,c);
+      if(ex!=null){
+        if(ex!==word[i]) return null;
+        inter++;
+      }else{
+        // perpendicular neighbours must be empty
+        if(dir==="A"){ if(get(r-1,c)!=null||get(r+1,c)!=null) return null; }
+        else { if(get(r,c-1)!=null||get(r,c+1)!=null) return null; }
+      }
+    }
+    if(inter<1) return null;
+    return {sr,sc,dir,inter};
+  }
+
+  function bestPlacement(word){
+    let cands=[];
+    for(const [k] of cells){
+      const [r,c]=k.split(",").map(Number);
+      const ch=cells.get(k);
+      for(let i=0;i<word.length;i++){
+        if(word[i]!==ch) continue;
+        const a=validate(word,r,c-i,"A"); if(a) cands.push(a);
+        const d=validate(word,r-i,c,"D"); if(d) cands.push(d);
+      }
+    }
+    if(!cands.length) return null;
+    cands.sort((x,y)=> y.inter-x.inter || rng()-0.5);
+    return cands[0];
+  }
+
+  const TARGET=12;
+  for(const word of pool){
+    if(placed.includes(word)) continue;
+    if(placed.length>=TARGET) break;
+    const p=bestPlacement(word);
+    if(!p) continue;
+    for(let i=0;i<word.length;i++){
+      const r= p.dir==="D"? p.sr+i : p.sr;
+      const c= p.dir==="A"? p.sc+i : p.sc;
+      cells.set(key(r,c),word[i]);
+    }
+    placed.push(word);
+  }
+
+  // normalize bounds
+  let minR=Infinity,minC=Infinity,maxR=-Infinity,maxC=-Infinity;
+  for(const [k] of cells){const [r,c]=k.split(",").map(Number);minR=Math.min(minR,r);minC=Math.min(minC,c);maxR=Math.max(maxR,r);maxC=Math.max(maxC,c);}
+  const H=maxR-minR+1,W=maxC-minC+1;
+  const grid=Array.from({length:H},()=>Array(W).fill(null));
+  for(const [k,v] of cells){const [r,c]=k.split(",").map(Number);grid[r-minR][c-minC]=v;}
+
+  // numbering + entries
+  const filled=(r,c)=> r>=0&&c>=0&&r<H&&c<W&&grid[r][c]!=null;
+  const numAt={};let num=0;const across=[],down=[];
+  for(let r=0;r<H;r++)for(let c=0;c<W;c++){
+    if(!filled(r,c))continue;
+    const sA=(!filled(r,c-1))&&filled(r,c+1);
+    const sD=(!filled(r-1,c))&&filled(r+1,c);
+    if(sA||sD){num++;numAt[r+","+c]=num;}
+    if(sA){let w="";const list=[];let cc=c;while(filled(r,cc)){w+=grid[r][cc];list.push([r,cc]);cc++;}
+      across.push({num,r,c,dir:"A",answer:w,cells:list});}
+    if(sD){let w="";const list=[];let rr=r;while(filled(rr,c)){w+=grid[rr][c];list.push([rr,c]);rr++;}
+      down.push({num,r,c,dir:"D",answer:w,cells:list});}
+  }
+  return {H,W,grid,across,down,numAt,filled};
+}
+
+/* ---------- App state ---------- */
+let DATE, PUZ, USER={}, SOLVED=false, sel=null, dir="A", saveTimer=null;
+const $=id=>document.getElementById(id);
+const EPOCH=new Date("2024-01-01T00:00:00");
+
+function fmtKey(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");}
+function parseKey(s){const [y,m,d]=s.split("-").map(Number);return new Date(y,m-1,d);}
+function seedFromKey(s){return parseInt(s.replace(/-/g,""),10);}
+function issueNo(s){return Math.floor((parseKey(s)-EPOCH)/86400000)+1;}
+function prettyDate(s){return parseKey(s).toLocaleDateString(undefined,{weekday:"long",year:"numeric",month:"long",day:"numeric"});}
+
+async function loadDate(dateStr){
+  DATE=dateStr;
+  PUZ=generatePuzzle(seedFromKey(dateStr));
+  USER={};SOLVED=false;sel=null;dir="A";
+  const saved=await Store.get("cw:v1:"+dateStr);
+  if(saved){try{const o=JSON.parse(saved);USER=o.grid||{};SOLVED=!!o.solved;}catch(e){}}
+  // default selection = first across cell
+  if(PUZ.across.length){sel={r:PUZ.across[0].r,c:PUZ.across[0].c};dir="A";}
+  renderAll();
+  $("datepick").value=dateStr;
+  $("issue").textContent=issueNo(dateStr);
+  $("dateline").textContent=prettyDate(dateStr);
+  updateNavBounds();
+  hideHint();
+}
+
+function buildGrid(){
+  const g=$("grid");
+  g.style.gridTemplateColumns=`repeat(${PUZ.W},1fr)`;
+  g.style.width="min(92vw,"+Math.min(520,PUZ.W*52)+"px)";
+  $("activeclue").style.width=g.style.width;
+  document.querySelectorAll(".tools,.hintbox").forEach(e=>e.style.width=g.style.width);
+  g.innerHTML="";
+  for(let r=0;r<PUZ.H;r++)for(let c=0;c<PUZ.W;c++){
+    const d=document.createElement("div");
+    if(!PUZ.filled(r,c)){d.className="cell block";g.appendChild(d);continue;}
+    d.className="cell";d.dataset.r=r;d.dataset.c=c;
+    const n=PUZ.numAt[r+","+c];
+    if(n){const s=document.createElement("div");s.className="num";s.textContent=n;d.appendChild(s);}
+    const L=document.createElement("div");L.className="ltr";L.textContent=USER[r+","+c]||"";d.appendChild(L);
+    d.addEventListener("click",()=>onCellClick(r,c));
+    g.appendChild(d);
+  }
+}
+
+function entryAt(r,c,d){
+  const list=d==="A"?PUZ.across:PUZ.down;
+  return list.find(e=>e.cells.some(([er,ec])=>er===r&&ec===c));
+}
+function currentEntry(){return sel?entryAt(sel.r,sel.c,dir):null;}
+
+function renderAll(){buildGrid();renderClues();refresh();}
+
+function renderClues(){
+  const mk=(list,el,d)=>{
+    el.innerHTML="";
+    list.slice().sort((a,b)=>a.num-b.num).forEach(e=>{
+      const li=document.createElement("li");
+      li.dataset.num=e.num;li.dataset.dir=d;
+      const filledAll=e.cells.every(([r,c])=>USER[r+","+c]);
+      const correct=e.cells.every(([r,c],i)=>USER[r+","+c]===e.answer[i]);
+      if(filledAll&&correct)li.classList.add("done");
+      const n=document.createElement("span");n.className="n";n.textContent=e.num;
+      const t=document.createElement("span");t.textContent=CLUE[e.answer]?(CLUE[e.answer]+" ("+e.answer.length+")"):e.answer;
+      li.appendChild(n);li.appendChild(t);
+      li.addEventListener("click",()=>{sel={r:e.r,c:e.c};dir=d;refresh();$("hidden").focus({preventScroll:true});});
+      el.appendChild(li);
+    });
+  };
+  mk(PUZ.across,$("acrossList"),"A");
+  mk(PUZ.down,$("downList"),"D");
+}
+
+function refresh(){
+  // ensure selection has an entry in current dir; else flip
+  if(sel&&!entryAt(sel.r,sel.c,dir)){dir=dir==="A"?"D":"A";}
+  const ent=currentEntry();
+  // cells
+  document.querySelectorAll(".cell").forEach(el=>{
+    if(el.classList.contains("block"))return;
+    const r=+el.dataset.r,c=+el.dataset.c;
+    el.classList.remove("hl","sel");
+    el.querySelector(".ltr").textContent=USER[r+","+c]||"";
+    if(ent&&ent.cells.some(([er,ec])=>er===r&&ec===c))el.classList.add("hl");
+    if(sel&&sel.r===r&&sel.c===c)el.classList.add("sel");
+  });
+  // clue lists active state + done
+  document.querySelectorAll("#acrossList li,#downList li").forEach(li=>li.classList.remove("active"));
+  if(ent){
+    const sel2=`#${dir==="A"?"acrossList":"downList"} li[data-num="${ent.num}"]`;
+    const li=document.querySelector(sel2);if(li)li.classList.add("active");
+    const txt=CLUE[ent.answer]?CLUE[ent.answer]:ent.answer;
+    $("activeclue").innerHTML=`<b>${ent.num} ${dir==="A"?"Across":"Down"}</b><span>${txt} (${ent.answer.length})</span>`;
+  }else{
+    $("activeclue").innerHTML="<b>—</b><span>Tap a square to begin.</span>";
+  }
+  // done strike refresh
+  renderCluesDoneState();
+  // status pill
+  const pill=$("statuspill");
+  if(SOLVED){pill.textContent="Solved ✓";pill.className="pill solved";}
+  else{const any=Object.keys(USER).length;pill.textContent=any?"In progress":"Not started";pill.className="pill";}
+  if(ent&&$("hintbox").classList.contains("on"))updateHint(ent);
+}
+function renderCluesDoneState(){
+  const upd=(list,d)=>list.forEach(e=>{
+    const li=document.querySelector(`#${d==="A"?"acrossList":"downList"} li[data-num="${e.num}"]`);
+    if(!li)return;
+    const ok=e.cells.every(([r,c],i)=>USER[r+","+c]===e.answer[i]);
+    li.classList.toggle("done",ok);
+  });
+  upd(PUZ.across,"A");upd(PUZ.down,"D");
+}
+
+function onCellClick(r,c){
+  if(sel&&sel.r===r&&sel.c===c){ if(entryAt(r,c,dir==="A"?"D":"A"))dir=dir==="A"?"D":"A"; }
+  else { sel={r,c}; if(!entryAt(r,c,dir)) dir=dir==="A"?"D":"A"; }
+  refresh();$("hidden").focus({preventScroll:true});
+}
+
+function moveNext(){
+  const ent=currentEntry();if(!ent)return;
+  const idx=ent.cells.findIndex(([r,c])=>r===sel.r&&c===sel.c);
+  if(idx<ent.cells.length-1){sel={r:ent.cells[idx+1][0],c:ent.cells[idx+1][1]};}
+}
+function movePrev(){
+  const ent=currentEntry();if(!ent)return;
+  const idx=ent.cells.findIndex(([r,c])=>r===sel.r&&c===sel.c);
+  if(idx>0){sel={r:ent.cells[idx-1][0],c:ent.cells[idx-1][1]};}
+}
+function step(dr,dc){
+  let r=sel.r+dr,c=sel.c+dc;
+  while(r>=0&&c>=0&&r<PUZ.H&&c<PUZ.W){ if(PUZ.filled(r,c)){sel={r,c};return;} r+=dr;c+=dc; }
+}
+
+function handleKey(e){
+  if(!sel)return;
+  const k=e.key;
+  if(/^[a-zA-Z]$/.test(k)){
+    USER[sel.r+","+sel.c]=k.toUpperCase();
+    if(SOLVED){SOLVED=false;}
+    moveNext();refresh();save();checkWin();e.preventDefault();
+  }else if(k==="Backspace"){
+    if(USER[sel.r+","+sel.c]){delete USER[sel.r+","+sel.c];}
+    else{movePrev();delete USER[sel.r+","+sel.c];}
+    refresh();save();e.preventDefault();
+  }else if(k==="ArrowRight"){dir="A";step(0,1);refresh();e.preventDefault();}
+  else if(k==="ArrowLeft"){dir="A";step(0,-1);refresh();e.preventDefault();}
+  else if(k==="ArrowDown"){dir="D";step(1,0);refresh();e.preventDefault();}
+  else if(k==="ArrowUp"){dir="D";step(-1,0);refresh();e.preventDefault();}
+  else if(k===" "||k==="Tab"){dir=dir==="A"?"D":"A";if(sel&&!entryAt(sel.r,sel.c,dir))dir=dir==="A"?"D":"A";refresh();e.preventDefault();}
+}
+
+function checkWin(){
+  const all=[...PUZ.across,...PUZ.down];
+  const done=all.every(e=>e.cells.every(([r,c],i)=>USER[r+","+c]===e.answer[i]));
+  if(done&&!SOLVED){
+    SOLVED=true;save();refresh();
+    const t=$("toast");$("toasttext").textContent="Solved! "+prettyDate(DATE).split(",")[0]+"'s grid is yours.";
+    t.classList.add("on");setTimeout(()=>t.classList.remove("on"),3600);
+  }
+}
+
+/* ---------- Buttons ---------- */
+function doCheck(){
+  document.querySelectorAll(".cell").forEach(el=>{
+    if(el.classList.contains("block"))return;
+    const r=+el.dataset.r,c=+el.dataset.c,u=USER[r+","+c];
+    el.classList.remove("wrong");
+    if(u&&u!==PUZ.grid[r][c])el.classList.add("wrong");
+  });
+  setTimeout(()=>document.querySelectorAll(".cell.wrong").forEach(el=>el.classList.remove("wrong")),1600);
+}
+function revealWord(){const ent=currentEntry();if(!ent)return;ent.cells.forEach(([r,c],i)=>USER[r+","+c]=ent.answer[i]);refresh();save();checkWin();}
+function revealAll(){for(let r=0;r<PUZ.H;r++)for(let c=0;c<PUZ.W;c++)if(PUZ.filled(r,c))USER[r+","+c]=PUZ.grid[r][c];refresh();save();checkWin();}
+function clearAll(){USER={};SOLVED=false;refresh();save();}
+
+/* ---------- Unscramble hint ---------- */
+function scramble(word,seed){const rng=mulberry32(seed);return shuffle(word.split(""),rng).join("");}
+function showHint(){const ent=currentEntry();if(!ent){return;}$("hintbox").classList.add("on");updateHint(ent);}
+function hideHint(){$("hintbox").classList.remove("on");}
+function updateHint(ent){
+  const letters=scramble(ent.answer,seedFromKey(DATE)+ent.num*(dir==="A"?7:13));
+  $("hintletters").textContent=letters.split("").join(" ");
+  $("hintbox").dataset.letters=letters;
+}
+function copyLetters(){
+  const txt=($("hintbox").dataset.letters||"");
+  const done=()=>{const c=$("copied");c.classList.add("show");setTimeout(()=>c.classList.remove("show"),1500);};
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(txt).then(done,done);}
+  else{const ta=document.createElement("textarea");ta.value=txt;document.body.appendChild(ta);ta.select();try{document.execCommand("copy");}catch(e){}ta.remove();done();}
+}
+
+/* ---------- Persistence ---------- */
+function save(){
+  clearTimeout(saveTimer);
+  saveTimer=setTimeout(async()=>{
+    await Store.set("cw:v1:"+DATE,JSON.stringify({grid:USER,solved:SOLVED,ts:Date.now()}));
+    const raw=await Store.get("cw:v1:played");
+    let arr=[];try{arr=raw?JSON.parse(raw):[];}catch(e){}
+    if(Object.keys(USER).length&&!arr.includes(DATE)){arr.push(DATE);await Store.set("cw:v1:played",JSON.stringify(arr));}
+  },350);
+}
+
+async function openArchive(){
+  const raw=await Store.get("cw:v1:played");
+  let arr=[];try{arr=raw?JSON.parse(raw):[];}catch(e){}
+  arr.sort().reverse();
+  const ul=$("arclist");ul.innerHTML="";
+  if(!arr.length){ul.innerHTML='<div class="arcempty">No past puzzles yet. Solve a square or two and they\'ll be saved here automatically.</div>';}
+  for(const dk of arr){
+    const saved=await Store.get("cw:v1:"+dk);let solved=false;try{solved=saved?JSON.parse(saved).solved:false;}catch(e){}
+    const li=document.createElement("li");
+    li.innerHTML=`<span class="when">${prettyDate(dk)}</span><span class="pill ${solved?"solved":""}">${solved?"Solved ✓":"In progress"}</span>`;
+    li.addEventListener("click",()=>{$("panel").classList.remove("on");loadDate(dk);});
+    ul.appendChild(li);
+  }
+  $("panel").classList.add("on");
+}
+
+/* ---------- Navigation ---------- */
+function shiftDay(n){const d=parseKey(DATE);d.setDate(d.getDate()+n);const ks=fmtKey(d);if(d<EPOCH)return;if(ks>fmtKey(new Date()))return;loadDate(ks);}
+function updateNavBounds(){
+  const today=fmtKey(new Date());
+  $("next").disabled = DATE>=today;
+  $("prev").disabled = DATE<=fmtKey(EPOCH);
+  $("datepick").min=fmtKey(EPOCH);$("datepick").max=today;
+}
+
+/* ---------- Wire up ---------- */
+$("prev").onclick=()=>shiftDay(-1);
+$("next").onclick=()=>shiftDay(1);
+$("todayBtn").onclick=()=>loadDate(fmtKey(new Date()));
+$("datepick").onchange=e=>{if(e.target.value)loadDate(e.target.value);};
+$("archiveBtn").onclick=openArchive;
+$("closePanel").onclick=()=>$("panel").classList.remove("on");
+$("panel").addEventListener("click",e=>{if(e.target.id==="panel")$("panel").classList.remove("on");});
+$("checkBtn").onclick=doCheck;
+$("revealWordBtn").onclick=revealWord;
+$("revealAllBtn").onclick=revealAll;
+$("clearBtn").onclick=clearAll;
+$("hintBtn").onclick=()=>{$("hintbox").classList.contains("on")?hideHint():showHint();};
+$("copyLetters").onclick=copyLetters;
+document.addEventListener("keydown",handleKey);
+$("hidden").addEventListener("input",()=>$("hidden").value="");
+document.querySelector(".grid")&&null;
+
+/* boot */
+loadDate(fmtKey(new Date()));
+</script>
+</body>
+</html>
